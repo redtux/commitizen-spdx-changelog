@@ -1,0 +1,45 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.17.0/.schema/devbox.schema.json",
+  "env": {
+    "DEVBOX_COREPACK_ENABLED": "0",
+    "LC_ALL": "C.UTF-8",
+    "OPENSPEC_TELEMETRY": "0",
+    "PATH": "$PWD/.venv/bin:$PWD/node_modules/.bin:$PWD/scripts:$PATH"
+  },
+  "env_from": "local.env",
+  "packages": {
+    "direnv": "2",
+    "gh": "2",
+    "glow": "2",
+    "nodejs-slim": {
+      "version": "24",
+      "disable_plugin": true
+    },
+    "opencode": "1",
+    "openspec": "1",
+    "prek": "0",
+    "python": {
+      "disable_plugin": true,
+      "version": "3.14"
+    },
+    "ripgrep": "15",
+    "shellcheck": "0",
+    "shfmt": "3",
+    "uv": "0"
+  },
+  "shell": {
+    "init_hook": [
+      "echo '1️⃣  INITIATE UV INSTALLATION... 🪄' && make uv-venv",
+      "echo '2️⃣  DOWNLOAD UV DEPENDENCIES... 🪄' && make uv-sync",
+      "echo '👋 WELCOME TO COMMITIZEN-SPDX-CHANGELOG! 👷'"
+    ],
+    "scripts": {
+      "help": "make help",
+      "prek-install": "make prek-install",
+      "prek-lint": "make prek-lint",
+      "prek-update": "make prek-update",
+      "uv-sync": "make uv-sync",
+      "uv-venv": "make uv-venv"
+    }
+  }
+}

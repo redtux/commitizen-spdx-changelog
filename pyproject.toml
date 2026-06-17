@@ -1,0 +1,97 @@
+# SPDX-FileCopyrightText: 2026 Pablo Hörtner <redtux@pm.me>
+#
+# SPDX-License-Identifier: Apache-2.0
+
+# pyproject.toml
+#
+# This file is part of commitizen-spdx-changelog, a plugin
+# for commitizen that generates changelogs in SPDX format.
+
+[build-system]
+build-backend = "uv_build"
+requires = ["uv_build>=0.11.21,<0.12.0"]
+
+[project]
+authors = [
+  { name = "Pablo Hörtner", email = "redtux@pm.me" }
+]
+dependencies = [
+    "commitizen>=4.16.3",
+]
+description = "Commitizen changelog format plugin with YAML frontmatter awareness for REUSE/SPDX-compliant changelogs"
+keywords = ["commitizen", "changelog", "spdx", "reuse", "yaml", "frontmatter"]
+license = "Apache-2.0"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+name = "commitizen-spdx-changelog"
+readme = "README.md"
+requires-python = ">=3.13"
+version = "0.0.1"
+
+[project.urls]
+Homepage = "https://github.com/redtux/commitizen-spdx-changelog"
+Issues = "https://github.com/redtux/commitizen-spdx-changelog/issues"
+Source = "https://github.com/redtux/commitizen-spdx-changelog"
+
+[project.entry-points."commitizen.changelog_format"]
+spdx-markdown = "commitizen_spdx_changelog.formatters.spdx_markdown:SPDXMarkdown"
+
+[dependency-groups]
+dev = [
+    "basedpyright>=1.39.8",
+    "mdformat-gfm-alerts>=2.0.0",
+    "mdformat-mkdocs[recommended]>=5.1.4",
+    "mdformat-pyproject>=0.1.1",
+    "mkdocstrings-python>=2.0.5",
+    "pytest>=9.1.1",
+    "rich>=15.0.0",
+    "ruff>=0.15.18",
+    "ty>=0.0.51",
+    "uv>=0.11.22",
+    "zensical>=0.0.45",
+]
+
+[tool.commitizen]
+changelog_file = "docs/changelog.md"
+changelog_format = "spdx-markdown"
+changelog_incremental = true
+major_version_zero = true
+name = "cz_conventional_commits"
+post_bump_hooks = ["uv lock", "git push --follow-tags"]
+tag_format = "v$version"
+update_changelog_on_bump = true
+version = "0.0.1"
+version_files = [
+    "pyproject.toml:version",
+]
+version_scheme = "semver2"
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+
+[tool.mdformat]
+exclude = [
+    "**/*.env",
+    "**/*.json",
+    "**/*.jsonc",
+    "**/*.lock",
+    "**/*.sh",
+    "**/*.toml",
+    "**/*.yaml",
+    "**/*.yml",
+    "**/.venv/**",
+    "**/LICENSE.md",
+    "**/LICENSES/**",
+    "**/Makefile",
+    "**/node_modules/**",
+    "**/out/**",
+    "**/tmp/**",
+]
+number = true
+wrap = 80

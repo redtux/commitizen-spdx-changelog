@@ -1,0 +1,32 @@
+# SPDX-FileCopyrightText: 2026 Pablo Hörtner <redtux@pm.me>
+#
+# SPDX-License-Identifier: Apache-2.0
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dev dependencies
+        run: uv sync --group dev
+
+      - name: Run tests
+        run: uv run pytest -v
+
+      - name: REUSE compliance check
+        run: uv run reuse lint

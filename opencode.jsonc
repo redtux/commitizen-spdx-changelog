@@ -1,0 +1,150 @@
+// SPDX-FileCopyrightText: 2026 Pablo Hörtner <redtux@pm.me>
+//
+// SPDX-License-Identifier: Apache-2.0
+{
+  // opencode.jsonc
+  "$schema": "https://opencode.ai/config.json",
+  "agent": {
+    // Code reviewer agent - focused on security, performance, maintainability.
+    // Read-only reviewer (no edit/write) to review without modifying code.
+    "code-reviewer": {
+      "description": "Reviews code for best practices and potential issues",
+      "model": "opencode/big-pickle",
+      "prompt": "You are a code reviewer. Focus on security, performance, and maintainability.",
+      "tools": {
+        "edit": false,
+        "write": false
+      }
+    }
+  },
+  // Automatically update opencode when a new version is released.
+  "autoupdate": true,
+  // Only use configured providers below.
+  "disabled_providers": [
+    "anthropic",
+    "github-copilot",
+    "openai"
+  ],
+  // Load AGENTS.md instructions for dev environment and tooling guidance.
+  "instructions": [
+    "AGENTS.md"
+  ],
+  // Language Server Protocol configuration (not used currently).
+  "lsp": {},
+  // Model Context Protocol - enables web search and GitHub code search tools.
+  "mcp": {
+    "context7": {
+      "enabled": true,
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp"
+    },
+    "gh_grep": {
+      "enabled": true,
+      "type": "remote",
+      "url": "https://mcp.grep.app"
+    }
+  },
+  // Main AI model for code generation and analysis.
+  "model": "opencode/big-pickle",
+  // Bash command permissions:
+  // allow (no prompt), ask (prompt for confirmation), deny (blocked)
+  "permission": {
+    "bash": {
+      "*": "ask",
+      "bun *": "ask",
+      "bunx *": "ask",
+      "cat *": "allow",
+      "cd *": "allow",
+      "echo *": "allow",
+      "gh repo view *": "allow",
+      "git add *": "ask",
+      "git branch *": "allow",
+      "git checkout *": "deny",
+      "git checkout -- *": "deny",
+      "git checkout -b *": "deny",
+      "git checkout HEAD *": "deny",
+      "git commit *": "ask",
+      "git config *": "allow",
+      "git describe *": "allow",
+      "git diff *": "allow",
+      "git fetch *": "allow",
+      "git log *": "allow",
+      "git ls-files *": "allow",
+      "git ls-remote *": "allow",
+      "git merge *": "ask",
+      "git mv *": "ask",
+      "git pull *": "ask",
+      "git push *": "ask",
+      "git rebase *": "ask",
+      "git remote *": "allow",
+      "git reset *": "deny",
+      "git restore *": "deny",
+      "git rev-list *": "allow",
+      "git rev-parse *": "allow",
+      "git revert *": "ask",
+      "git rm *": "ask",
+      "git show *": "allow",
+      "git stash list": "allow",
+      "git status *": "allow",
+      "git tag *": "allow",
+      "grep *": "allow",
+      "head *": "allow",
+      "ls *": "allow",
+      "make *": "allow",
+      "mdformat *": "allow",
+      "mdformat --ignore-missing-references *": "deny",
+      "mdformat --no-validate *": "deny",
+      "openspec archive --yes": "allow",
+      "openspec status *": "allow",
+      "pip *": "deny",
+      "rg *": "allow",
+      "shellcheck *": "allow",
+      "shfmt *": "allow",
+      "tree *": "allow",
+      "tail *": "allow",
+      "uv *": "allow",
+      "uv pip *": "ask",
+      "wc *": "allow"
+    },
+    // External directory access (outside the workspace root).
+    // ORDER MATTERS: broad rules first, narrow rules last.
+    // opencode evaluates the LAST matching rule (last wins).
+    "external_directory": {
+      "*": "ask",
+      "/tmp/**": "deny"
+    },
+    // General file operation permissions.
+    "edit": "ask",
+    "read": "allow",
+    "write": "ask"
+  },
+  // Provider configurations - each defines available models and endpoints.
+  "provider": {
+    "ollama": {
+      "models": {
+        "deepseek-v3.1:671b-cloud": {},
+        "glm-4.6:cloud": {},
+        "gpt-oss:120b-cloud": {},
+        "gpt-oss:20b-cloud": {},
+        "kimi-k2:1t-cloud": {},
+        "llama3.2": {},
+        "minimax-m2:cloud": {},
+        "qwen3-coder:480b-cloud": {},
+        "qwen3-vl:235b-cloud": {},
+        "qwen3-vl:235b-instruct-cloud": {}
+      },
+      "name": "Local Models",
+      "npm": "@ai-sdk/openai-compatible",
+      "options": {
+        "baseURL": "http://localhost:11434/v1"
+      }
+    },
+    "openrouter": {
+      "models": {
+        "openai/gpt-oss-20b:free": {}
+      }
+    }
+  },
+  // Fallback model for lightweight tasks (file operations, searches).
+  "small_model": "opencode/big-pickle"
+}
