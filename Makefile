@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-.PHONY: devbox-update devbox-upgrade docs-build docs-format help docs-lint docs-serve reuse test uv-venv uv-sync
+.PHONY: devbox-update devbox-upgrade docs-build docs-format help docs-lint docs-serve reuse test uv-lock uv-venv uv-sync
 
 help:
 	@echo "Available targets:"
@@ -15,6 +15,7 @@ help:
 	@echo "  help         		  Show this help message"
 	@echo "  reuse        		  Run REUSE compliance check"
 	@echo "  test         		  Run test suite with pytest"
+	@echo "  uv-lock      		  Update and commit uv.lock lockfile"
 	@echo "  uv-sync      		  Sync dependencies with uv"
 	@echo "  uv-venv      		  Create/update uv virtual environment"
 
@@ -63,6 +64,11 @@ docs-build:
 
 docs-serve:
 	@uv run zensical serve
+
+uv-lock:
+	@uv lock
+	git add uv.lock
+	git commit -m "build(deps): update uv.lock"
 
 uv-sync:
 	@uv sync \
