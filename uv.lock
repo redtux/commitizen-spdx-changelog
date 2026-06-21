@@ -12,6 +12,15 @@ wheels = [
 ]
 
 [[package]]
+name = "attrs"
+version = "26.1.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/9a/8e/82a0fe20a541c03148528be8cac2408564a6c9a0cc7e9171802bc1d26985/attrs-26.1.0.tar.gz", hash = "sha256:d03ceb89cb322a8fd706d4fb91940737b6642aa36998fe130a9bc96c985eff32", size = 952055, upload-time = "2026-03-19T14:22:25.026Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/64/b4/17d4b0b2a2dc85a6df63d1157e028ed19f90d4cd97c36717afef2bc2f395/attrs-26.1.0-py3-none-any.whl", hash = "sha256:c647aa4a12dfbad9333ca4e71fe62ddc36f4e63b2d260a37a8b83d2f043ac309", size = 67548, upload-time = "2026-03-19T14:22:23.645Z" },
+]
+
+[[package]]
 name = "basedpyright"
 version = "1.39.8"
 source = { registry = "https://pypi.org/simple" }
@@ -47,6 +56,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/ae/9d/ed7b7dc146881698f5d71ce8a384f8e8f80790b1b12c73598efa81b8c3ed/beautysh-6.4.3.tar.gz", hash = "sha256:2aceb602fa7e27dafd24d5bc480986e17870873c2827a2b8d720118cafac3018", size = 75729, upload-time = "2026-03-12T07:31:55.296Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/f7/c9/3a4d1b3d91d49cc9acf0ad909ee91bd045062ea5866e1cd4e717d7769a2a/beautysh-6.4.3-py3-none-any.whl", hash = "sha256:5b8fab21a2da6231d916489be74772615b33ce5d3e9dc736ebc1f953621b323c", size = 27042, upload-time = "2026-03-12T07:31:53.889Z" },
+]
+
+[[package]]
+name = "boolean-py"
+version = "5.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/c4/cf/85379f13b76f3a69bca86b60237978af17d6aa0bc5998978c3b8cf05abb2/boolean_py-5.0.tar.gz", hash = "sha256:60cbc4bad079753721d32649545505362c754e121570ada4658b852a3a318d95", size = 37047, upload-time = "2025-04-03T10:39:49.734Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e5/ca/78d423b324b8d77900030fa59c4aa9054261ef0925631cd2501dd015b7b7/boolean_py-5.0-py3-none-any.whl", hash = "sha256:ef28a70bd43115208441b53a045d1549e2f0ec6e3d08a9d142cbc41c1938e8d9", size = 26577, upload-time = "2025-04-03T10:39:48.449Z" },
 ]
 
 [[package]]
@@ -166,6 +184,7 @@ dev = [
     { name = "mdformat-pyproject" },
     { name = "mkdocstrings-python" },
     { name = "pytest" },
+    { name = "reuse" },
     { name = "rich" },
     { name = "ruff" },
     { name = "ty" },
@@ -184,6 +203,7 @@ dev = [
     { name = "mdformat-pyproject", specifier = ">=0.1.1" },
     { name = "mkdocstrings-python", specifier = ">=2.0.5" },
     { name = "pytest", specifier = ">=9.1.1" },
+    { name = "reuse", specifier = ">=6.2.0" },
     { name = "rich", specifier = ">=15.0.0" },
     { name = "ruff", specifier = ">=0.15.18" },
     { name = "ty", specifier = ">=0.0.51" },
@@ -295,6 +315,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/48/a4/6283089b46c2bd895f5c4b223456167ea859ce54fed01f4c1ee4e8a8ed20/jsbeautifier-2.0.1.tar.gz", hash = "sha256:45603b2097410feee8d3a6ef8ad5a8e0a0e89f347331888a97e46f332ce8d953", size = 74659, upload-time = "2026-06-20T01:33:19.067Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/40/d6/21f1650549b150e3d5b36ff7118ca0c9b6dd400fe58386f29cdbcc0017b5/jsbeautifier-2.0.1-py3-none-any.whl", hash = "sha256:e70bad11b394d538139e05b02ace5706a0125c580a1ec9f8599cb75bf609e6f7", size = 93876, upload-time = "2026-06-20T01:33:17.127Z" },
+]
+
+[[package]]
+name = "license-expression"
+version = "30.4.4"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "boolean-py" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/40/71/d89bb0e71b1415453980fd32315f2a037aad9f7f70f695c7cec7035feb13/license_expression-30.4.4.tar.gz", hash = "sha256:73448f0aacd8d0808895bdc4b2c8e01a8d67646e4188f887375398c761f340fd", size = 186402, upload-time = "2025-07-22T11:13:32.17Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/af/40/791891d4c0c4dab4c5e187c17261cedc26285fd41541577f900470a45a4d/license_expression-30.4.4-py3-none-any.whl", hash = "sha256:421788fdcadb41f049d2dc934ce666626265aeccefddd25e162a26f23bcbf8a4", size = 120615, upload-time = "2025-07-22T11:13:31.217Z" },
 ]
 
 [[package]]
@@ -795,6 +827,24 @@ wheels = [
 ]
 
 [[package]]
+name = "python-debian"
+version = "1.1.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/75/36/f90e7d006dd9311a6185f1c34b403dd6d76ff583e7962c56e9374c462a48/python_debian-1.1.1.tar.gz", hash = "sha256:fe4fc3dc798dbf1f0ef5865e2b1b4f7cc0352b6a511b25ab7594906c64a73629", size = 127956, upload-time = "2026-06-07T11:06:58.282Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/6e/47/e184f0004e63dbc49c4bad5e811218f66bece1b519f80b06a619b42e6ec3/python_debian-1.1.1-py3-none-any.whl", hash = "sha256:f98ae013e8e5310e49041cc3860a7105df73af73d4ff1d8afb474770d328a6ad", size = 138101, upload-time = "2026-06-07T11:06:56.632Z" },
+]
+
+[[package]]
+name = "python-magic"
+version = "0.4.27"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/da/db/0b3e28ac047452d079d375ec6798bf76a036a08182dbb39ed38116a49130/python-magic-0.4.27.tar.gz", hash = "sha256:c1ba14b08e4a5f5c31a302b7721239695b2f0f058d125bd5ce1ee36b9d9d3c3b", size = 14677, upload-time = "2022-06-07T20:16:59.508Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/6c/73/9f872cb81fc5c3bb48f7227872c28975f998f3e7c2b1c16e95e6432bbb90/python_magic-0.4.27-py2.py3-none-any.whl", hash = "sha256:c212960ad306f700aa0d01e5d7a325d20548ff97eb9920dcd29513174f0294d3", size = 13840, upload-time = "2022-06-07T20:16:57.763Z" },
+]
+
+[[package]]
 name = "pyyaml"
 version = "6.0.3"
 source = { registry = "https://pypi.org/simple" }
@@ -853,6 +903,21 @@ sdist = { url = "https://files.pythonhosted.org/packages/f6/45/eafb0bba0f9988f6a
 wheels = [
     { url = "https://files.pythonhosted.org/packages/3c/26/1062c7ec1b053db9e499b4d2d5bc231743201b74051c973dadeac80a8f43/questionary-2.1.1-py3-none-any.whl", hash = "sha256:a51af13f345f1cdea62347589fbb6df3b290306ab8930713bfae4d475a7d4a59", size = 36753, upload-time = "2025-08-28T19:00:19.56Z" },
 ]
+
+[[package]]
+name = "reuse"
+version = "6.2.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "attrs" },
+    { name = "click" },
+    { name = "jinja2" },
+    { name = "license-expression" },
+    { name = "python-debian" },
+    { name = "python-magic" },
+    { name = "tomlkit" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/05/35/298d9410b3635107ce586725cdfbca4c219c08d77a3511551f5e479a78db/reuse-6.2.0.tar.gz", hash = "sha256:4feae057a2334c9a513e6933cdb9be819d8b822f3b5b435a36138bd218897d23", size = 1615611, upload-time = "2025-10-27T15:25:46.336Z" }
 
 [[package]]
 name = "rich"

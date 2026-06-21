@@ -49,6 +49,7 @@ dev = [
     "mdformat-pyproject>=0.1.1",
     "mkdocstrings-python>=2.0.5",
     "pytest>=9.1.1",
+    "reuse>=6.2.0",
     "rich>=15.0.0",
     "ruff>=0.15.18",
     "ty>=0.0.51",
