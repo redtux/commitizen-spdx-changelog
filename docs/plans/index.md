@@ -8,20 +8,20 @@ icon: lucide/list
 title: Implementation Plans
 ---
 
-Numbered implementation plans organized for easier parallel or sequential
-implementation.
+This project is in early development. Numbered implementation plans are
+organized for easier parallel or sequential implementation.
 
-| Plan                      | Status  | Description          |
-| ------------------------- | ------- | -------------------- |
-| [01-problem-and-goal]     | partial | Problem and goal     |
-| [02-scaffolding]          | done    | Scaffolding          |
-| [03-design]               | done    | Design               |
-| [04-pyproject-toml]       | done    | pyproject.toml       |
-| [05-tests]                | partial | Tests                |
-| [06-ci-cd]                | done    | CI/CD                |
-| [07-reuse-and-smoke-test] | partial | REUSE and smoke test |
-| [08-release]              | pending | Release              |
-| [09-doc-generation]       | pending | Doc generation       |
+| Status | Plan                      | Description          |
+| ------ | ------------------------- | -------------------- |
+| ✅     | [01-problem-and-goal]     | Problem and goal     |
+| ✅     | [02-scaffolding]          | Scaffolding          |
+| ✅     | [03-design]               | Design               |
+| ✅     | [04-pyproject-toml]       | pyproject.toml       |
+| ✅     | [05-tests]                | Tests                |
+| ✅     | [06-ci-cd]                | CI/CD                |
+| ✅     | [07-reuse-and-smoke-test] | REUSE and smoke test |
+| 📋     | [08-release]              | Release              |
+| ✅     | [09-doc-generation]       | Doc generation       |
 
 <!-- References -->
 

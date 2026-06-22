@@ -31,14 +31,18 @@ uv sync --group dev
 
 | Action             | Command                                     |
 | ------------------ | ------------------------------------------- |
-| Run tests          | `uv run pytest -v`                          |
-| Run single test    | `uv run python tests/test_spdx_markdown.py` |
+| Build distribution | `uv build`                                  |
 | Build docs         | `make docs-build`                           |
 | Format markdown    | `make docs-format`                          |
 | Lint markdown      | `make docs-lint`                            |
-| Serve docs         | `make docs-serve`                           |
 | REUSE compliance   | `make reuse`                                |
-| Build distribution | `uv build`                                  |
+| Run single test    | `uv run python tests/test_spdx_markdown.py` |
+| Run tests          | `uv run pytest -v`                          |
+| Serve docs         | `make docs-serve`                           |
+| Update devbox docs | `devbox generate readme docs/devbox.md`     |
+
+The [Devbox guide](devbox.md) documents the development environment, scripts,
+and packages — regenerate it any time `devbox.json` changes.
 
 There is no standalone linter or typecheck script — `ruff` runs inside
 `mdformat-ruff` (formats code fences in markdown). `pyright` configuration
@@ -85,6 +89,30 @@ For a deeper dive, see the [architecture plan](plans/03-design.md).
 - **Commit style**: conventional commits with `major_version_zero=true` (e.g.
     `feat:`, `fix:`, `docs:`, `chore:`)
 
+## Documentation standards
+
+All project documentation follows [Google's Documentation Best Practices]:
+
+| Principle                               | Description                                          |
+| --------------------------------------- | ---------------------------------------------------- |
+| Minimum Viable Documentation            | Keep docs fresh and trimmed, cut unnecessary content |
+| Update Docs with Code                   | Change docs in the same commits as code changes      |
+| Delete Dead Documentation               | Remove outdated, incorrect, or redundant content     |
+| Prefer the Good Over the Perfect        | Iterate rather than chase perfection                 |
+| Documentation is the Story of Your Code | Write for humans first, computers second             |
+| Duplication is Evil                     | Link to existing guides instead of rewriting         |
+
+The README additionally follows [Google's README guidelines]. Every release-
+ready README.md must show ✅ on all five requirements:
+
+| #   | README requirement                             | Status |
+| --- | ---------------------------------------------- | ------ |
+| 1   | What it is and what it's used for              | ✅     |
+| 2   | Points of contact                              | ✅     |
+| 3   | Status (early development, stable, deprecated) | ✅     |
+| 4   | How to use with copyable commands              | ✅     |
+| 5   | Links to relevant documentation                | ✅     |
+
 ## How to contribute
 
 1. Fork the repository and create a branch.
@@ -101,5 +129,9 @@ If you're unsure about something, feel free to open an issue first.
 See the [implementation plans](plans/index.md) for the current status and
 direction of the project.
 
+<!-- References -->
+
 [commitizen]: https://commitizen-tools.github.io/commitizen/
+[google's documentation best practices]: https://google.github.io/styleguide/docguide/best_practices.html
+[google's readme guidelines]: https://google.github.io/styleguide/docguide/READMEs.html
 [uv]: https://docs.astral.sh/uv/

@@ -39,7 +39,6 @@ reference pages, every public symbol must have a proper Google-style docstring:
 | `SPDXMarkdown` class      | `formatters/spdx_markdown.py` | Full class docstring (parameters, attributes)  |
 | `_strip_frontmatter`      | `formatters/spdx_markdown.py` | Args/returns for the function                  |
 | `_SPDXMarkdownImpl` class | `formatters/_impl.py`         | Method docstrings for overrides                |
-| `hello()`                 | `__init__.py`                 | Brief docstring                                |
 | Module docstrings         | All `.py` files               | Expand to Google-style (summary + description) |
 
 ## `mkdocstrings` integration with Zensical
@@ -50,8 +49,10 @@ handler that supports Google-style docstrings.
 
 ### Installation
 
-```sh
-uv add --dev mkdocstrings-python
+Added to `[dependency-groups] dev` in `pyproject.toml`:
+
+```text
+"mkdocstrings-python>=2.0.5",
 ```
 
 ### Configuration for Zensical
@@ -65,14 +66,22 @@ paths = ["src"]
 
 [project.plugins.mkdocstrings.handlers.python.options]
 docstring_style = "google"
+heading_level = 3
 inherited_members = true
+show_root_full_path = false
+show_root_heading = true
 show_source = false
 ```
 
 Key options:
 
 - `docstring_style` — `"google"` (we use Google style).
+- `heading_level` — heading level for root API entries (3 = `<h3>`).
 - `inherited_members` — include inherited methods in the docs.
+- `show_root_full_path` — omit the full dotted path prefix on root headings.
+- `show_root_heading` — render a visible heading for the documented symbol
+    (defaults to `false`, which was the root cause of invisible headings on
+    first attempt).
 - `show_source` — whether to display the source code link.
 - `paths` — directories to search for Python modules (relative to project root).
 - `inventories` — intersphinx inventories for cross-referencing (e.g. Python
@@ -85,43 +94,77 @@ Key options:
 
 ### Example usage in a Markdown page
 
+Create `docs/api.md` with a bare `:::` block (no inline YAML options):
+
 ```markdown
 ::: commitizen_spdx_changelog.formatters.spdx_markdown.SPDXMarkdown
-    handler: python
-    options:
-      show_source: true
 ```
 
-This renders the full API reference for `SPDXMarkdown` inline in the page.
+This renders the full API reference for `SPDXMarkdown` inline in the page. All
+handler and option configuration is inherited from `zensical.toml`.
+
+**mdformat caveat**: `:::` blocks with inline YAML (e.g. `handler: python`,
+`options:`) get mangled by mdformat because it treats them as regular paragraphs
+and collapses multi-line indented options. Use bare identifiers only — any
+per-block customisation must go through the global `zensical.toml` config.
+
+**Underscore escape**: mdformat escapes lone underscores in `:::` paths,
+breaking references to private symbols (e.g. `::_impl` becomes `:\_impl`). The
+workaround is to not document private API entry points via `:::` — instead,
+document the public wrapper class whose docstring covers the implementation.
 
 ## Implementation steps
 
 1. **Enrich docstrings.** Write Google-style docstrings for every public symbol
     (see prerequisite table above).
-2. **Install `mkdocstrings-python`.** Add to dev dependencies.
+2. **Install `mkdocstrings-python`.** Add to dev dependency group.
 3. **Configure in `zensical.toml`.** Add the `[project.plugins.mkdocstrings]`
     section with Python handler settings (Google style, `paths = ["src"]`,
     `inherited_members = true`, `show_source = false`).
-4. **Add `:::` directives to doc pages.** Insert mkdocstrings `:::` blocks in
-    the relevant Markdown files under `docs/` to pull in API reference docs.
-5. **Integrate with CI.** Add a `docs` job in `.github/workflows/ci.yaml` that
+4. **Create `docs/api.md`.** Insert a bare `:::` block referencing
+    `commitizen_spdx_changelog.formatters.spdx_markdown.SPDXMarkdown`.
+5. **Add nav entry.** Add `{ "API Reference" = "api.md" }` to the `nav` list in
+    `zensical.toml`.
+6. **Discover `show_root_heading`.** Initially documentation appeared to
+    produce no output — the root cause was `show_root_heading` defaulting to
+    `false`. Without it, mkdocstrings renders the docstring content without
+    any visible heading, making the page appear empty. Enable
+    `show_root_heading = true` and `show_root_full_path = false`.
+7. **Fix mdformat compatibility.** mdformat collapses multi-line options inside
+    `:::` blocks and escapes underscores. Switch to bare identifiers and
+    remove inline YAML options — all configuration moves to `zensical.toml`.
+8. **Expand `SPDXMarkdown` docstring.** Since `_SPDXMarkdownImpl` is private
+    and its `:::` path is broken by mdformat's underscore escaping, document
+    the implementation architecture (lazy loading, overridden methods) in the
+    public `SPDXMarkdown` docstring instead.
+9. **Integrate with CI.** Add a `docs` job in `.github/workflows/ci.yaml` that
     builds the Zensical site and fails if docs are out of date.
-6. **Verify end-to-end.** Run `make docs-build` and confirm API reference pages
+10. **Verify end-to-end.** Run `make docs-build` and confirm API reference pages
     render correctly and REUSE compliance is maintained.
 
 ## Tasks
 
 - [x] **Enrich docstrings.** Write Google-style docstrings for `SPDXMarkdown`,
-    `_SPDXMarkdownImpl`, `_strip_frontmatter`, `hello()`, and all module
-    docstrings.
-- [x] **Install `mkdocstrings-python`.** Add to dev dependencies with
-    `uv add --dev mkdocstrings-python`.
+    `_SPDXMarkdownImpl`, `_strip_frontmatter`, and all module docstrings
+    (`hello()` was removed from `__init__.py` instead).
+- [x] **Install `mkdocstrings-python`.** Add to `[dependency-groups] dev` in
+    `pyproject.toml`.
 - [x] **Configure in `zensical.toml`.** Add Python handler with Google docstring
     style, `paths = ["src"]`, `inherited_members = true`, `show_source = false`.
-- [x] **Add `:::` directives.** Insert mkdocstrings blocks in doc pages for each
-    public module/class to render API reference.
-- [ ] **Integrate with CI.** Add a `docs` job that builds with Zensical and
-    fails on diff if docs changed.
+- [x] **Create `docs/api.md`.** Insert bare `:::` block referencing
+    `commitizen_spdx_changelog.formatters.spdx_markdown.SPDXMarkdown`.
+- [x] **Add nav entry.** Include `{ "API Reference" = "api.md" }` in the `nav`
+    list.
+- [x] **Fix `show_root_heading`.** Enable `show_root_heading = true` and
+    `show_root_full_path = false` to make root symbol headings visible.
+- [x] **Fix mdformat compatibility.** Remove inline YAML from `:::` blocks; move
+    all configuration to global `zensical.toml`. Note: mdformat escapes
+    underscores in paths, so private symbols (`_impl`) cannot use `:::`.
+- [x] **Expand `SPDXMarkdown` docstring.** Document lazy-loading architecture,
+    `_SPDXMarkdownImpl`, and both overridden methods — covers private
+    implementation details that cannot have their own `:::` block.
+- [x] **Integrate with CI.** Add a `docs` job that builds with Zensical and runs
+    markdown linting.
 - [x] **Verify end-to-end.** Run `make docs-build` and confirm API reference
     pages render correctly.
 
@@ -140,7 +183,7 @@ This renders the full API reference for `SPDXMarkdown` inline in the page.
 - [x] docs build succeeds with `make docs-build` — no mkdocstrings errors.
 - [x] Generated pages maintain SPDX frontmatter (host pages already have
     headers; mkdocstrings output inherits them).
-- [ ] CI docs job passes (build succeeds). — deferred to CI/CD plan
+- [x] CI docs job passes (build succeeds).
 
 ## See also
 
