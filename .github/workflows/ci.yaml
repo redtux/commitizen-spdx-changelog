@@ -1,3 +1,5 @@
+---
+
 # SPDX-FileCopyrightText: 2026 Pablo Hörtner <redtux@pm.me>
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -21,6 +23,8 @@ jobs:
       - uses: astral-sh/setup-uv@v5
         with:
           python-version: ${{ matrix.python-version }}
+          enable-cache: true
+          cache-suffix: ${{ matrix.python-version }}
 
       - name: Install dev dependencies
         run: uv sync --group dev
@@ -30,3 +34,23 @@ jobs:
 
       - name: REUSE compliance check
         run: uv run reuse lint
+
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.14"
+          enable-cache: true
+          cache-suffix: "3.14"
+
+      - name: Install dev dependencies
+        run: uv sync --group dev
+
+      - name: Lint markdown formatting
+        run: make docs-lint
+
+      - name: Build documentation
+        run: make docs-build

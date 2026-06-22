@@ -1,3 +1,5 @@
+---
+
 # SPDX-FileCopyrightText: 2026 Pablo Hörtner <redtux@pm.me>
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -13,9 +15,11 @@ jobs:
     runs-on: ubuntu-latest
     environment: pypi
     permissions:
-      id-token: write
+      contents: write     # read for checkout, write for the GitHub Release step
+      id-token: write     # PyPI OIDC trusted publishing
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+      - uses: actions/checkout@v6
 
       - uses: astral-sh/setup-uv@v5
 
@@ -24,3 +28,17 @@ jobs:
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+
+      - name: Extract changelog section for this tag
+        run: |
+          VERSION="${GITHUB_REF_NAME}"
+          awk "/^## ${VERSION} /{flag=1; next} \
+            /^## v[0-9]/{flag=0} \
+            /^<!-- References/{flag=0} \
+            flag" docs/changelog.md > release-notes.md
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: dist/*
+          generate_release_notes: true
