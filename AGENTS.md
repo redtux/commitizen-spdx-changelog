@@ -8,23 +8,68 @@ SPDX-License-Identifier: Apache-2.0
 
 ## Commands
 
-| Action                  | Command                                                 |
-| ----------------------- | ------------------------------------------------------- |
-| Install dev deps        | `uv sync --group dev`                                   |
-| Run tests               | `uv run pytest -v`                                      |
-| Run single test file    | `uv run python tests/test_spdx_markdown.py -v`          |
-| Build docs              | `make docs-build`                                       |
-| Format markdown         | `make docs-format`                                      |
-| Lint markdown           | `make docs-lint`                                        |
-| Serve docs              | `make docs-serve`                                       |
-| REUSE annotation        | `make reuse`                                            |
-| Bump & changelog        | `cz bump --changelog`                                   |
-| Build distribution      | `uv build`                                              |
-| Format .opencode/ files | `uv run mdformat .opencode/commands/ .opencode/skills/` |
+| Action                  | Command                                        |
+| ----------------------- | ---------------------------------------------- |
+| Install dev deps        | `uv sync --group dev`                          |
+| Run tests               | `uv run pytest -v`                             |
+| Run single test file    | `uv run python tests/test_spdx_markdown.py -v` |
+| Build docs              | `make docs-build`                              |
+| Format markdown         | `make docs-format`                             |
+| Lint markdown           | `make docs-lint`                               |
+| Serve docs              | `make docs-serve`                              |
+| REUSE annotation        | `make reuse`                                   |
+| Bump & changelog        | `cz bump --changelog`                          |
+| Build distribution      | `uv build`                                     |
+| Format .opencode/ files | `uv run mdformat .opencode/{commands,skills}`  |
 
 No standalone linter or typecheck script — `ruff` runs only via `mdformat-ruff`
 (markdown code fences). `pyright` config exists in `pyproject.toml` but has no
 wired command.
+
+## Commit rules
+
+Uses commitizen `cz_conventional_commits` with `major_version_zero=true`.
+
+Format: `<type>(<scope>): <subject>`.
+
+### Subject
+
+Max 52 chars including the `type(scope):` prefix. Run
+`cz commit --message-length-limit 52` to enforce it.
+
+### Body
+
+Always include a body, structured in three parts:
+
+1. **Opening paragraph** — what this commit does and why, in plain English.
+2. **Bullet details** — all bullets in a single `-m` flag, separated by
+    newlines.
+3. **Footer** — reference to related issue or PR when applicable.
+
+```sh
+git commit <file> \
+    -m "type(scope): subject" \
+    -m "Paragraph describing what and why." \
+-m "- Bullet describing a key change
+- Another bullet
+- Third bullet if needed, each wrapping naturally" \
+    -m "Ref: #X"
+```
+
+Use `-F tmp/msg` instead of inline `-m` when the message contains backticks or
+dynamic content (see [Shell backticks](#shell-backticks-in-cli-args) below).
+
+### OpenSpec commits
+
+| Action          | Commit message template                     |
+| --------------- | ------------------------------------------- |
+| Create change   | `docs(openspec): create <change-id> change` |
+| Create spec     | `docs(openspec): create '<spec-name>' spec` |
+| Mark tasks done | `docs(openspec): mark <change-id> done`     |
+| Archive         | `chore(openspec): archive <change-id>`      |
+
+Every file must carry a [SPDX/REUSE header](#conventions). See the Conventions
+section above for the exact format.
 
 ## Architecture
 
@@ -69,19 +114,43 @@ the frontmatter line count.
 - **mdformat-gfm**: does not recognize `a.`/`b.`/`c.` as list markers → use
     `- **a.**` / `- **b.**` to keep nesting
 
-## Post-edit checklist
+- **mkdocstrings `:::` blocks**: mdformat treats `:::` blocks (mkdocstrings
+    syntax) as regular paragraphs and collapses multi-line YAML options. To keep
+    `:::` blocks intact, put the full identifier on a single line (under
+    80 chars), omit inline YAML options, and do NOT use `<!-- mdformat off -->`
+    / `<!--   mdformat on -->`.
 
-After editing any markdown file or updating OpenSpec changes, run:
+## Constraints
 
-```
-make docs-format
-make reuse
-```
+### Shell backticks in CLI args
 
-**Note**: `make docs-format` does NOT cover `.opencode/` files — format those
-separately with `uv run mdformat .opencode/commands/ .opencode/skills/`.
+- **Problem**: Agent uses backticks `` ` `` inside `--body`, `-m`, or similar
+    inline string arguments.
+- **Consequence**: Bash interprets backticks as command substitution →
+    malformed/broken issues, PRs, and commits.
+- **Rule**: Always write content to a file first with
+    `cat > tmp/<file> <<'EOF'`, then use file-based flags (`--body-file` for
+    `gh`, `-F` for `git commit`, etc.).
 
-## OpenSpec workflow
+### Directory permissions
+
+- **Problem**: Agent writes to `/tmp/` or other paths outside the workspace
+    without verifying permissions.
+- **Consequence**: Security risk; operation is silently denied.
+- **Rule**: Use `tmp/` at the project root (`<project-root>/tmp/`). Create with
+    `mkdir -p tmp/` before first use. `/tmp/` is always denied — never use it.
+
+### Tool permissions
+
+- **Problem**: Agent attempts bash commands, file operations, or external
+    directory access without checking `opencode.jsonc` first.
+- **Consequence**: `deny` items are rejected without warning; `ask` items block
+    execution until user approves.
+- **Rule**: Check `opencode.jsonc` permission block before any operation.
+
+## OpenSpec
+
+### Workflow
 
 1. **Create change** — `/opsx-propose <name>` or manually
 2. **Commit** the new artifacts
@@ -97,7 +166,7 @@ separately with `uv run mdformat .opencode/commands/ .opencode/skills/`.
 **IMPORTANT**: Do NOT skip the approval step (step 6). Implementation should
 always pause for user confirmation before committing and archiving.
 
-## OpenSpec
+### Notes
 
 - Always use `openspec archive --yes` to archive changes (non-interactive) — do
     NOT `mv` manually, or delta specs will not be synced to `openspec/specs/`.
@@ -107,13 +176,14 @@ always pause for user confirmation before committing and archiving.
     placeholders and replace them with a concise purpose paragraph describing
     the capability.
 
-## mkdocstrings `:::` blocks and mdformat
+## Post-edit checklist
 
-mdformat treats `:::` blocks (mkdocstrings syntax) as regular paragraphs and
-collapses multi-line YAML options. **To keep `:::` blocks intact:**
+After editing any markdown file or updating OpenSpec changes, run:
 
-- Put the full identifier on a single line (under 80 chars)
-- Omit inline YAML options — rely on global config in
-    `[project.plugins.mkdocstrings]` in `zensical.toml`
-- Do NOT use `<!-- mdformat off -->` / `<!-- mdformat on -->` — it does not
-    protect `:::` content from mdformat paragraph reflow
+```sh
+make docs-format
+make reuse
+```
+
+**Note**: `make docs-format` does NOT cover `.opencode/` files — format those
+separately with `uv run mdformat .opencode/commands/ .opencode/skills/`.
