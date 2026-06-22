@@ -34,10 +34,16 @@
       "echo '👋 WELCOME TO COMMITIZEN-SPDX-CHANGELOG! 👷'"
     ],
     "scripts": {
+      "devbox-update": "make devbox-update",
+      "devbox-upgrade": "make devbox-upgrade",
+      "docs-build": "make docs-build",
+      "docs-format": "make docs-format",
+      "docs-lint": "make docs-lint",
+      "docs-serve": "make docs-serve",
       "help": "make help",
-      "prek-install": "make prek-install",
-      "prek-lint": "make prek-lint",
-      "prek-update": "make prek-update",
+      "reuse": "make reuse",
+      "test": "make test",
+      "uv-lock": "make uv-lock",
       "uv-sync": "make uv-sync",
       "uv-venv": "make uv-venv"
     }
