@@ -22,6 +22,7 @@ organized for easier parallel or sequential implementation.
 | ✅     | [07-reuse-and-smoke-test] | REUSE and smoke test |
 | 📋     | [08-release]              | Release              |
 | ✅     | [09-doc-generation]       | Doc generation       |
+| 📋     | [10-collapse-impl]        | Collapse \_impl.py   |
 
 <!-- References -->
 
@@ -34,3 +35,4 @@ organized for easier parallel or sequential implementation.
 [07-reuse-and-smoke-test]: ./07-reuse-and-smoke-test.md
 [08-release]: ./08-release.md
 [09-doc-generation]: ./09-doc-generation.md
+[10-collapse-impl]: ./10-collapse-impl.md
