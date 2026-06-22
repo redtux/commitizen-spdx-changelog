@@ -7,21 +7,20 @@ SPDX-License-Identifier: Apache-2.0
 ## Why
 
 The two-file architecture (`spdx_markdown.py` + `_impl.py`) with a
-`__new__`-based lazy wrapper solves a circular-import problem that does not
-exist. In reality, `Markdown` is already in `sys.modules` when commitizen scans
-entry points — there is no cycle. Worse, the `__new__` redirection breaks
-`isinstance()` because `_SPDXMarkdownImpl` does not subclass `SPDXMarkdown`,
-making any type check against the wrapper fail silently.
+`__new__`-based lazy wrapper solves a real circular-import problem (commitizen's
+`changelog_formats.__init__.py` loads entry points at import time). However, the
+split also introduces a latent bug: `_SPDXMarkdownImpl` does not subclass
+`SPDXMarkdown`, so `isinstance(formatter, SPDXMarkdown)` returns `False`.
 
 ## What Changes
 
-- Replace `spdx_markdown.py` with a single-file implementation where
-    `SPDXMarkdown` directly subclasses `Markdown`.
+- Collapse `_impl.py` into `spdx_markdown.py`. The wrapper `SPDXMarkdown` is
+    defined first (before any commitizen imports), then
+    `_SPDXMarkdownImpl(SPDXMarkdown, Markdown)` is defined after commitizen
+    imports, fixing the `isinstance` check via multiple inheritance.
 - Delete `src/commitizen_spdx_changelog/formatters/_impl.py` entirely.
-- Remove all lazy-loading machinery (`__new__`, `_resolve()`, `TYPE_CHECKING`
-    stubs, `import sys as _sys`).
+- Remove unused `import sys as _sys`.
 - Verify `py.typed` (PEP 561 marker) lands in the built wheel.
-- Run ruff to confirm E402 violations disappear.
 
 ## Capabilities
 

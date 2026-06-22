@@ -8,25 +8,26 @@ SPDX-License-Identifier: Apache-2.0
 
 The formatter module (`spdx_markdown.py`) currently defines a lightweight
 wrapper class that resolves to `_SPDXMarkdownImpl` via `__new__` at
-instantiation time. The real implementation lives in `_impl.py`, which
-subclasses `Markdown` directly. This two-file split was motivated by a perceived
-circular-import risk during commitizen's entry-point scanning.
+instantization time. The real implementation lives in `_impl.py`, which
+subclasses `Markdown` directly. This two-file split was motivated by a
+circular-import risk during commitizen's entry-point scanning — and the risk is
+real. When commitizen's `changelog_formats.__init__.py` loads, it scans entry
+points at import time, which triggers our module to load. The wrapper
+`SPDXMarkdown` must exist on the partially-loaded module before any commitizen
+imports run.
 
-In reality, `commitizen.changelog_formats.markdown.Markdown` is already loaded
-in `sys.modules` by the time entry points are scanned — commitizen uses it
-internally for its built-in `"markdown"` format. There is no cycle to break. The
-split also introduces a latent bug: `_SPDXMarkdownImpl` does not subclass
+The split also introduces a latent bug: `_SPDXMarkdownImpl` does not subclass
 `SPDXMarkdown`, so `isinstance(formatter, SPDXMarkdown)` returns `False`.
 
 ## Goals / Non-Goals
 
 **Goals:**
 
-- Fix the `isinstance()` breakage by making `SPDXMarkdown` a direct subclass of
-    `Markdown`.
-- Remove all unnecessary lazy-loading machinery (`__new__`, `_resolve()`,
-    `TYPE_CHECKING` stubs, `import sys as _sys`).
-- Eliminate the E402 lint violations caused by staggered imports.
+- Fix the `isinstance()` breakage via multiple inheritance.
+- Collapse the two-file architecture into a single module.
+- Preserve the entry-point scanning order (wrapper defined before commitizen
+    imports).
+- Remove the unused `import sys as _sys`.
 - Verify `py.typed` remains included in the built wheel.
 
 **Non-Goals:**
@@ -35,24 +36,31 @@ split also introduces a latent bug: `_SPDXMarkdownImpl` does not subclass
 - Updating downstream documentation plans (`03-design.md`,
     `09-doc-generation.md`).
 - Modifying test files (they already work with the new structure).
+- Eliminating E402 warnings (they are inherent to the staggered-import approach
+    and were present in the original code too).
 
 ## Decisions
 
-### Single-file collapse
+### Single-file collapse with multiple inheritance
 
-**Decision**: Merge `_impl.py` into `spdx_markdown.py`. `SPDXMarkdown` becomes a
-direct `Markdown` subclass. All commitizen types (`Metadata`,
-`IncrementalMergeInfo`, `Markdown`) are imported at module level.
+**Decision**: Merge `_impl.py` into `spdx_markdown.py`. The wrapper
+`SPDXMarkdown` is defined first (before any commitizen imports). The
+`_SPDXMarkdownImpl` class inherits from both `SPDXMarkdown` and `Markdown`,
+fixing the `isinstance` check. A `__new__` override on `_SPDXMarkdownImpl`
+prevents infinite recursion.
 
-**Rationale**: The two-file split solves a non-existent problem and introduces a
-real bug. A single file is simpler, eliminates the E402 warnings, and makes the
-class hierarchy honest.
+**Rationale**: The two-file split is unnecessary complexity. A single file is
+simpler and makes the class hierarchy honest. The `__new__` pattern is still
+necessary because `commitizen.changelog_formats.__init__.py` loads entry points
+at import time — the wrapper must exist before `Markdown` is imported.
 
 **Alternatives considered**:
 
-- Keeping the split and fixing `isinstance` by having `_SPDXMarkdownImpl`
-    inherit from `SPDXMarkdown` — rejected because it preserves unnecessary
-    complexity for zero benefit.
+- Making `SPDXMarkdown` a direct `Markdown` subclass: rejected because importing
+    `Markdown` triggers entry point scanning before `SPDXMarkdown` is defined →
+    `AttributeError`.
+- Removing the `__new__` pattern entirely: rejected for the same reason as
+    above.
 
 ### BaseConfig stays lazy
 
@@ -69,8 +77,8 @@ circular-import workaround.
 `spdx_markdown:SPDXMarkdown`. No registration changes needed.
 
 **Rationale**: The public class name and module path are unchanged. The entry
-point scanner will find `SPDXMarkdown` directly since it is now defined at
-module level without any redirection.
+point scanner will find `SPDXMarkdown` directly since it is defined before
+commitizen imports run.
 
 ## Risks / Trade-offs
 
@@ -79,6 +87,5 @@ module level without any redirection.
 - **Tests break**: Very low risk — tests already import `SPDXMarkdown` and
     `_strip_frontmatter` from `spdx_markdown`, which is the same public API. No
     test changes needed.
-- **Commitizen entry point scan fails**: Low risk — `Markdown` is already in
-    `sys.modules`. The single-file approach removes the only thing that could
-    theoretically cause issues.
+- **E402 warnings**: Inherent to the staggered-import approach. Suppressed with
+    `noqa: E402`. The original code also had these.
