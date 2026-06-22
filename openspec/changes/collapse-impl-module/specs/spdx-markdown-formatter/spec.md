@@ -12,16 +12,22 @@ Define the behavior contract for the SPDXMarkdown changelog format plugin.
 
 ## Requirements
 
-### Requirement: SPDXMarkdown subclasses Markdown directly
+### Requirement: Single-file module with isinstance fix
 
-The `SPDXMarkdown` class SHALL inherit from
-`commitizen.changelog_formats.markdown.Markdown` directly. There SHALL be no
-wrapper class, no `__new__` redirection, and no `_resolve()` lazy-loading
-machinery.
+The `SPDXMarkdown` wrapper and `_SPDXMarkdownImpl` implementation SHALL live in
+a single file. The `__new__` pattern is necessary (commitizen loads entry points
+at import time). The `isinstance` fix is achieved by having `_SPDXMarkdownImpl`
+inherit from both `SPDXMarkdown` and `Markdown`.
 
 #### Scenario: isinstance check passes
 
 - **WHEN** a caller runs `isinstance(formatter, SPDXMarkdown)` on an instance
+    created via `SPDXMarkdown(config)`
+- **THEN** the result SHALL be `True`
+
+#### Scenario: isinstance Markdown check passes
+
+- **WHEN** a caller runs `isinstance(formatter, Markdown)` on an instance
     created via `SPDXMarkdown(config)`
 - **THEN** the result SHALL be `True`
 
@@ -45,17 +51,17 @@ frontmatter lines removed.
 - **THEN** `get_metadata` SHALL return indices identical to the parent
     `Markdown.get_metadata`
 
-### Requirement: Module imports at top level
+### Requirement: Module imports structured for circular-import avoidance
 
 Core commitizen types (`Metadata`, `IncrementalMergeInfo`, `Markdown`) SHALL be
-imported at module level. Only `BaseConfig` may remain lazy inside `__init__`
-(cosmetic — not a workaround).
+imported after the `SPDXMarkdown` wrapper class definition. The staggered import
+order is necessary and produces E402 warnings that are suppressed with
+`noqa: E402`. Only `BaseConfig` may remain lazy inside `__init__`.
 
 #### Scenario: Module loads cleanly
 
 - **WHEN** Python imports `commitizen_spdx_changelog.formatters.spdx_markdown`
-- **THEN** no `E402` (module-level import not at top) warnings SHALL be raised
-    by ruff
+- **THEN** the entry point SHALL load without circular import errors
 
 ### Requirement: Entry point registration
 
