@@ -23,6 +23,7 @@ entry-point scanning phase.
 
 from __future__ import annotations
 
+import abc
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -32,7 +33,7 @@ if TYPE_CHECKING:
     from commitizen.config.base_config import BaseConfig
 
 
-class SPDXMarkdown:
+class SPDXMarkdown(abc.ABC):
     """Markdown changelog format with YAML frontmatter awareness.
 
     Compatible with REUSE/SPDX-compliant changelogs that carry an SPDX header
@@ -121,7 +122,7 @@ def _strip_frontmatter(lines: Sequence[str]) -> tuple[list[str], int]:
     return list(lines), 0  # unclosed frontmatter — treat as no-op
 
 
-class _SPDXMarkdownImpl(SPDXMarkdown, Markdown):
+class _SPDXMarkdownImpl(Markdown):
     """Actual implementation — subclasses Markdown for work, SPDXMarkdown for isinstance.
 
     Wraps :class:`commitizen.changelog_formats.markdown.Markdown` with
@@ -130,9 +131,6 @@ class _SPDXMarkdownImpl(SPDXMarkdown, Markdown):
     Attributes:
         config: The commitizen configuration object.
     """
-
-    def __new__(cls, config=None):  # noqa: D102
-        return Markdown.__new__(cls)
 
     def __init__(self, config=None):
         if config is None:
@@ -198,3 +196,6 @@ class _SPDXMarkdownImpl(SPDXMarkdown, Markdown):
             name=result.name,
             index=(result.index + offset) if result.index is not None else None,
         )
+
+
+SPDXMarkdown.register(_SPDXMarkdownImpl)
