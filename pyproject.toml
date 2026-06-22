@@ -43,7 +43,6 @@ spdx-markdown = "commitizen_spdx_changelog.formatters.spdx_markdown:SPDXMarkdown
 
 [dependency-groups]
 dev = [
-    "basedpyright>=1.39.8",
     "mdformat-gfm-alerts>=2.0.0",
     "mdformat-mkdocs[recommended]>=5.1.4",
     "mdformat-pyproject>=0.1.1",
