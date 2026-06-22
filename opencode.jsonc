@@ -33,6 +33,11 @@
   "lsp": {},
   // Model Context Protocol - enables web search and GitHub code search tools.
   "mcp": {
+    "codebase-memory-mcp": {
+      "enabled": true,
+      "type": "stdio",
+      "command": "codebase-memory-mcp"
+    },
     "context7": {
       "enabled": true,
       "type": "remote",
