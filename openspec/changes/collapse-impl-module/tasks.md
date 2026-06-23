@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0
 ## 1. Collapse module
 
 - [x] 1.1 Replace `src/commitizen_spdx_changelog/formatters/spdx_markdown.py`
-    with single-file `SPDXMarkdown(Markdown)` implementation
+    with single-file wrapper + implementation using abc.ABC virtual subclassing
 - [x] 1.2 Delete `src/commitizen_spdx_changelog/formatters/_impl.py`
 
 ## 2. Verify and clean

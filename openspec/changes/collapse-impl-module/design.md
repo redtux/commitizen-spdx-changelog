@@ -23,7 +23,7 @@ The split also introduces a latent bug: `_SPDXMarkdownImpl` does not subclass
 
 **Goals:**
 
-- Fix the `isinstance()` breakage via multiple inheritance.
+- Fix the `isinstance()` breakage via abc.ABC virtual subclassing.
 - Collapse the two-file architecture into a single module.
 - Preserve the entry-point scanning order (wrapper defined before commitizen
     imports).
@@ -41,18 +41,20 @@ The split also introduces a latent bug: `_SPDXMarkdownImpl` does not subclass
 
 ## Decisions
 
-### Single-file collapse with multiple inheritance
+### Single-file collapse with abc.ABC virtual subclassing
 
 **Decision**: Merge `_impl.py` into `spdx_markdown.py`. The wrapper
-`SPDXMarkdown` is defined first (before any commitizen imports). The
-`_SPDXMarkdownImpl` class inherits from both `SPDXMarkdown` and `Markdown`,
-fixing the `isinstance` check. A `__new__` override on `_SPDXMarkdownImpl`
-prevents infinite recursion.
+`SPDXMarkdown` inherits from `abc.ABC` and is defined first (before any
+commitizen imports). The `_SPDXMarkdownImpl` class inherits from `Markdown`
+only. `SPDXMarkdown.register(_SPDXMarkdownImpl)` creates the virtual subclass
+relationship, fixing the `isinstance` check.
 
 **Rationale**: The two-file split is unnecessary complexity. A single file is
-simpler and makes the class hierarchy honest. The `__new__` pattern is still
-necessary because `commitizen.changelog_formats.__init__.py` loads entry points
-at import time — the wrapper must exist before `Markdown` is imported.
+simpler and makes the class hierarchy honest. The `abc.ABC` approach avoids
+multiple inheritance and the fragile `__new__` recursion workaround. The
+staggered import order is still necessary because
+`commitizen.changelog_formats.__init__.py` loads entry points at import time —
+the wrapper must exist before `Markdown` is imported.
 
 **Alternatives considered**:
 

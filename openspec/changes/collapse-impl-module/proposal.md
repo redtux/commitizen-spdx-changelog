@@ -15,9 +15,10 @@ split also introduces a latent bug: `_SPDXMarkdownImpl` does not subclass
 ## What Changes
 
 - Collapse `_impl.py` into `spdx_markdown.py`. The wrapper `SPDXMarkdown` is
-    defined first (before any commitizen imports), then
-    `_SPDXMarkdownImpl(SPDXMarkdown, Markdown)` is defined after commitizen
-    imports, fixing the `isinstance` check via multiple inheritance.
+    defined first (before any commitizen imports), then `_SPDXMarkdownImpl` is
+    defined after commitizen imports, inheriting only from `Markdown`. The
+    `isinstance` fix is achieved via `abc.ABCMeta` virtual subclassing
+    (`SPDXMarkdown.register()`).
 - Delete `src/commitizen_spdx_changelog/formatters/_impl.py` entirely.
 - Remove unused `import sys as _sys`.
 - Verify `py.typed` (PEP 561 marker) lands in the built wheel.

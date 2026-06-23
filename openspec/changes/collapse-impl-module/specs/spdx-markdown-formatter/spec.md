@@ -10,7 +10,7 @@ SPDX-License-Identifier: Apache-2.0
 
 Define the behavior contract for the SPDXMarkdown changelog format plugin.
 
-## Requirements
+## ADDED Requirements
 
 ### Requirement: Single-file module with isinstance fix
 
