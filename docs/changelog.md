@@ -13,6 +13,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog][keepachangelog], and this project
 adheres to [Semantic Versioning][semver2].
 
+## v0.1.1 (2026-06-23)
+
+### Fix
+
+- collapse SPDXMarkdown formatter into one file
+- remove _impl.py as merged into spdx_markdown
+
+### Refactor
+
+- **formatters**: use abc virtual subclassing
+
 ## v0.1.0 (2026-06-21)
 
 ### Feat
