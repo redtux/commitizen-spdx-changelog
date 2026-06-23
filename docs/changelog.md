@@ -18,7 +18,7 @@ adheres to [Semantic Versioning][semver2].
 ### Fix
 
 - collapse SPDXMarkdown formatter into one file
-- remove _impl.py as merged into spdx_markdown
+- remove \_impl.py as merged into spdx_markdown
 
 ### Refactor
 
