@@ -11,18 +11,19 @@ title: Implementation Plans
 This project is in early development. Numbered implementation plans are
 organized for easier parallel or sequential implementation.
 
-| Status | Plan                      | Description          |
-| ------ | ------------------------- | -------------------- |
-| ✅     | [01-problem-and-goal]     | Problem and goal     |
-| ✅     | [02-scaffolding]          | Scaffolding          |
-| ✅     | [03-design]               | Design               |
-| ✅     | [04-pyproject-toml]       | pyproject.toml       |
-| ✅     | [05-tests]                | Tests                |
-| ✅     | [06-ci-cd]                | CI/CD                |
-| ✅     | [07-reuse-and-smoke-test] | REUSE and smoke test |
-| 📋     | [08-release]              | Release              |
-| ✅     | [09-doc-generation]       | Doc generation       |
-| 📋     | [10-collapse-impl]        | Collapse \_impl.py   |
+| Status | Plan                      | Description                           |
+| ------ | ------------------------- | ------------------------------------- |
+| ✅     | [01-problem-and-goal]     | Problem and goal                      |
+| ✅     | [02-scaffolding]          | Scaffolding                           |
+| ✅     | [03-design]               | Design                                |
+| ✅     | [04-pyproject-toml]       | pyproject.toml                        |
+| ✅     | [05-tests]                | Tests                                 |
+| ✅     | [06-ci-cd]                | CI/CD                                 |
+| ✅     | [07-reuse-and-smoke-test] | REUSE and smoke test                  |
+| 📋     | [08-release]              | Release                               |
+| ✅     | [09-doc-generation]       | Doc generation                        |
+| ⏭️     | [10-collapse-impl]        | Collapse \_impl.py (superseded by 11) |
+| ✅     | [11-direct-subclass]      | Direct subclass                       |
 
 <!-- References -->
 
@@ -36,3 +37,4 @@ organized for easier parallel or sequential implementation.
 [08-release]: ./08-release.md
 [09-doc-generation]: ./09-doc-generation.md
 [10-collapse-impl]: ./10-collapse-impl.md
+[11-direct-subclass]: ./11-direct-subclass.md
