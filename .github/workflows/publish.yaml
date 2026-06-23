@@ -8,26 +8,23 @@ name: Publish
 
 on:
   push:
-    tags: [v*]
+    tags: ["v*"]
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     environment: pypi
     permissions:
-      contents: write     # read for checkout, write for the GitHub Release step
-      id-token: write     # PyPI OIDC trusted publishing
+      contents: write
+      id-token: write
     steps:
       - name: Checkout
-      - uses: actions/checkout@v6
+        uses: actions/checkout@v6
 
       - uses: astral-sh/setup-uv@v5
 
       - name: Build distribution
         run: uv build
-
-      - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
 
       - name: Extract changelog section for this tag
         run: |
@@ -40,5 +37,8 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
+          body_path: release-notes.md
           files: dist/*
-          generate_release_notes: true
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
