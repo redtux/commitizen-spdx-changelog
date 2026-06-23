@@ -75,11 +75,12 @@ section above for the exact format.
 
 Single-package Python project at `src/commitizen_spdx_changelog/`.
 
-**Circular-import workaround**: The entry point
-(`spdx_markdown.py:SPDXMarkdown`) defines the class BEFORE any commitizen
-import. The real implementation in `_impl.py` (`_SPDXMarkdownImpl(Markdown)`) is
-imported lazily inside `__new__`. This allows commitizen's entry-point scanner
-to find the class without triggering a circular import.
+**Circular-import avoidance**: The `SPDXMarkdown` class directly inherits from
+`commitizen.changelog_formats.markdown.Markdown`. A warm-up import in
+`tests/conftest.py` initializes `commitizen.changelog_formats` before any test
+module imports the plugin, preventing the circular-import cycle that would
+otherwise occur if the plugin module is the first to touch commitizen's
+entry-point-loading machinery.
 
 Only two methods override the parent `Markdown` changelog format:
 `get_metadata()` and `get_latest_full_release()`. Both strip `---`-delimited
