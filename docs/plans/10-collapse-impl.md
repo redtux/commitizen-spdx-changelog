@@ -5,9 +5,15 @@
 
 description: Collapse module into single file and remove lazy import
 icon: lucide/combine
-status: pending
+status: superseded
 title: Plan 10 — Collapse _impl.py
 ---
+
+> **Superseded** by [Plan 11 — Use direct subclass](11-direct-subclass.md). The
+> ABC wrapper pattern introduced here was later found to fix a problem that only
+> occurs at test collection time, not in production. Plan 11 replaces the
+> wrapper with a direct `class SPDXMarkdown(Markdown):` and moves the
+> cold-import fix to `tests/conftest.py`.
 
 ## Problem
 
