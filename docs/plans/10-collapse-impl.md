@@ -33,11 +33,11 @@ Replace `src/commitizen_spdx_changelog/formatters/spdx_markdown.py` with a
 single-file implementation. The final form:
 
 - `SPDXMarkdown` wrapper defined first (before any commitizen imports) —
-    preserves the entry-point scanning order
-- `_SPDXMarkdownImpl(SPDXMarkdown, Markdown)` — inherits from both parents,
-    fixing the `isinstance` check
-- `_SPDXMarkdownImpl.__new__` overrides `SPDXMarkdown.__new__` to avoid
-    recursion
+    preserves the entry-point scanning order; inherits from `abc.ABC`
+- `_SPDXMarkdownImpl(Markdown)` — inherits from `Markdown` only;
+    `SPDXMarkdown.register(_SPDXMarkdownImpl)` creates the virtual subclass
+    relationship, fixing the `isinstance` check
+- No `__new__` override needed on `_SPDXMarkdownImpl`
 - Same `_strip_frontmatter` utility (unchanged logic)
 - Same method overrides (`get_metadata`, `get_latest_full_release`)
 - Remove `import sys as _sys` (was unused)
@@ -72,7 +72,7 @@ path the lazy-loading was nominally protecting.
 
 Existing tests (`test_spdx_markdown.py`) import `SPDXMarkdown` and
 `_strip_frontmatter` from `spdx_markdown` — zero changes needed. The formatter
-instantiation `SPDXMarkdown(config)` now works honestly (no `__new__` redirect),
+instantiation `SPDXMarkdown(config)` now works honestly via virtual subclassing,
 matching what the tests already expect.
 
 ## Not in scope
@@ -82,9 +82,9 @@ Update `03-design.md` & `09-doc-generation.md` to reflect the new architecture.
 ## Tasks
 
 - [x] **Replace `spdx_markdown.py`** — write single-file implementation:
-    `SPDXMarkdown` wrapper defined first,
-    `_SPDXMarkdownImpl(SPDXMarkdown,     Markdown)` defined after commitizen
-    imports, `__new__` overridden on impl class to prevent recursion.
+    `SPDXMarkdown(abc.ABC)` wrapper defined first, `_SPDXMarkdownImpl(Markdown)`
+    defined after commitizen imports, `SPDXMarkdown.register()` for virtual
+    subclassing.
 - [x] **Delete `_impl.py`** — remove
     `src/commitizen_spdx_changelog/formatters/_impl.py`.
 - [x] **Verify `py.typed`** — `uv build && unzip -l dist/*.whl | grep py.typed`.
@@ -108,8 +108,8 @@ Update `03-design.md` & `09-doc-generation.md` to reflect the new architecture.
 ## Acceptance
 
 - [x] `spdx_markdown.py` is a single file, no imports from `_impl`.
-- [x] `_SPDXMarkdownImpl(SPDXMarkdown, Markdown)` — isinstance checks pass for
-    both parents.
+- [x] `_SPDXMarkdownImpl` registered as virtual subclass of `SPDXMarkdown` via
+    `abc.ABC` — isinstance checks pass.
 - [x] `_impl.py` no longer exists.
 - [x] `py.typed` present in the built wheel.
 - [x] `ruff check src/` — zero warnings.
