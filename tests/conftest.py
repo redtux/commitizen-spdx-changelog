@@ -4,6 +4,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+import commitizen.changelog_formats  # noqa: F401  — warm up before plugin import
+
 import pytest
 
 
