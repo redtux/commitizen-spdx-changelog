@@ -2,7 +2,15 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-.PHONY: devbox-update devbox-upgrade docs-build docs-format help docs-lint docs-serve reuse test uv-lock uv-venv uv-sync
+# Makefile
+#
+# This file is part of commitizen-spdx-changelog, a plugin
+# for commitizen that generates changelogs in SPDX format.
+#
+# Run `make <target>` to execute a target. Run `make help` to list all targets.
+
+.PHONY: devbox-update devbox-upgrade docs-build docs-format docs-lint \
+  docs-serve py-format py-lint help reuse test uv-lock uv-sync uv-venv
 
 help:
 	@echo "Available targets:"
@@ -12,12 +20,20 @@ help:
 	@echo "  docs-format  		  Format Markdown files with mdformat"
 	@echo "  docs-lint    		  Lint Markdown files with mdformat"
 	@echo "  docs-serve   		  Serve documentation site locally with zensical"
+	@echo "  py-format    		  Format Python source files with ruff & ty"
+	@echo "  py-lint      		  Lint Python source files with ruff & ty"
 	@echo "  help         		  Show this help message"
 	@echo "  reuse        		  Run REUSE compliance check"
 	@echo "  test         		  Run test suite with pytest"
 	@echo "  uv-lock      		  Update and commit uv.lock lockfile"
 	@echo "  uv-sync      		  Sync dependencies with uv"
 	@echo "  uv-venv      		  Create/update uv virtual environment"
+
+devbox-update:
+	@devbox update
+
+devbox-upgrade:
+	@devbox version update
 
 docs-format:
 	@uv run mdformat \
@@ -32,6 +48,32 @@ docs-lint:
 		README.md \
 		docs/ \
 		openspec/
+
+docs-build:
+	@uv run zensical build
+
+docs-serve:
+	@uv run zensical serve
+
+py-format:
+	# Formatting src/ files with ruff
+	@uv run ruff check src/ --fix --unsafe-fixes
+	# Formatting src/ files with ty
+	@uv run ty check src/ --fix
+	# Formatting tests/ files with ruff
+	@uv run ruff check tests/ --fix --unsafe-fixes
+	# Formatting tests/ files with ty
+	@uv run ty check tests/ --fix
+
+py-lint:
+	# Linting src/ files with ruff
+	@uv run ruff check src/
+	# Linting src/ files with ty
+	@uv run ty check src/
+	# Linting tests/ files with ruff
+	@uv run ruff check tests/
+	# Linting tests/ files with ty
+	@uv run ty check tests/
 
 reuse:
 	@uv run reuse annotate \
@@ -48,23 +90,6 @@ reuse:
 test:
 	@uv run pytest -v
 
-uv-venv:
-	@uv venv \
-		--allow-existing \
-		--quiet
-
-devbox-update:
-	@devbox update
-
-devbox-upgrade:
-	@devbox version update
-
-docs-build:
-	@uv run zensical build
-
-docs-serve:
-	@uv run zensical serve
-
 uv-lock:
 	@uv lock
 	git add uv.lock
@@ -78,3 +103,8 @@ uv-sync:
 		--all-packages \
 		--system-certs \
 		--upgrade
+
+uv-venv:
+	@uv venv \
+		--allow-existing \
+		--quiet

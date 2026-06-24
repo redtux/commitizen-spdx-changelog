@@ -45,6 +45,8 @@ This project has the following scripts:
 - [docs-lint](#devbox-run-docs-lint)
 - [docs-serve](#devbox-run-docs-serve)
 - [help](#devbox-run-help)
+- [py-format](#devbox-run-py-format)
+- [py-lint](#devbox-run-py-lint)
 - [reuse](#devbox-run-reuse)
 - [test](#devbox-run-test)
 - [uv-lock](#devbox-run-uv-lock)
@@ -128,6 +130,18 @@ make docs-serve
 
 ```sh
 make help
+```
+
+### devbox run py-format
+
+```sh
+make py-format
+```
+
+### devbox run py-lint
+
+```sh
+make py-lint
 ```
 
 ### devbox run reuse

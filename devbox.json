@@ -41,6 +41,8 @@
       "docs-lint": "make docs-lint",
       "docs-serve": "make docs-serve",
       "help": "make help",
+      "py-format": "make py-format",
+      "py-lint": "make py-lint",
       "reuse": "make reuse",
       "test": "make test",
       "uv-lock": "make uv-lock",

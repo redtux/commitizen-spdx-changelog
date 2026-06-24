@@ -15,7 +15,9 @@ SPDX-License-Identifier: Apache-2.0
 | Run single test file    | `uv run python tests/test_spdx_markdown.py -v` |
 | Build docs              | `make docs-build`                              |
 | Format markdown         | `make docs-format`                             |
+| Format Python code      | `make py-format`                               |
 | Lint markdown           | `make docs-lint`                               |
+| Lint Python code        | `make py-lint`                                 |
 | Serve docs              | `make docs-serve`                              |
 | REUSE annotation        | `make reuse`                                   |
 | Bump & changelog        | `cz bump --changelog`                          |
@@ -179,12 +181,16 @@ always pause for user confirmation before committing and archiving.
 
 ## Post-edit checklist
 
-After editing any markdown file or updating OpenSpec changes, run:
+After editing any file, run:
 
 ```sh
+make py-format
 make docs-format
 make reuse
+make py-lint
+make docs-lint
 ```
 
-**Note**: `make docs-format` does NOT cover `.opencode/` files — format those
-separately with `uv run mdformat .opencode/commands/ .opencode/skills/`.
+**Note**: `make docs-format` and `make docs-lint` do NOT cover `.opencode/`
+files — format those separately with
+`uv run mdformat .opencode/commands/ .opencode/skills/`.
