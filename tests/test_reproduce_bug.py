@@ -4,7 +4,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""Subprocess smoke tests for scripts/reproduce_bug.py."""
+"""Subprocess smoke tests for ``scripts/reproduce_bug.py``.
+
+Every test runs the script in a subprocess and checks for expected
+output markers such as ``BUG CONFIRMED`` and the false version ``2.0``.
+"""
 
 from __future__ import annotations
 
@@ -26,6 +30,8 @@ def _run(*args: str) -> subprocess.CompletedProcess:
 
 
 class TestReproduceBug:
+    """Verify each step of the bug reproduction script."""
+
     def test_step3_reproduces_bug(self):
         """Step 3 must detect the false version '2.0' from Apache-2.0."""
         result = _run("--step", "3", "--unattended")
@@ -43,20 +49,24 @@ class TestReproduceBug:
         assert "Removed" in result.stdout or "Nothing to clean" in result.stdout
 
     def test_step1_runs_without_error(self):
+        """Step 1 must complete successfully and confirm the bug."""
         result = _run("--step", "1", "--unattended")
         assert result.returncode == 0, result.stderr
         assert "BUG CONFIRMED" in result.stdout
 
     def test_step2_runs_without_error(self):
+        """Step 2 must complete successfully and confirm the bug."""
         result = _run("--step", "2", "--unattended")
         assert result.returncode == 0, result.stderr
         assert "BUG CONFIRMED" in result.stdout
 
     def test_all_steps_unattended(self):
+        """Run all steps in unattended mode."""
         result = _run("--unattended")
         assert result.returncode == 0, result.stderr
 
     def test_clean_flag_idempotent(self):
+        """``--clean`` must succeed even on a clean state."""
         result = _run("--clean")
         assert result.returncode == 0, result.stderr
 

@@ -4,6 +4,15 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+"""Unit tests for the SPDXMarkdown formatter and ``_strip_frontmatter`` utility.
+
+Test groups:
+
+- :class:`TestStripFrontmatter` — edge cases for the YAML frontmatter parser.
+- :class:`TestSPDXMarkdown` — ``get_metadata`` and ``get_latest_full_release``
+  with and without frontmatter.
+"""
+
 from pathlib import Path
 
 import pytest
@@ -16,6 +25,8 @@ from commitizen_spdx_changelog.formatters.spdx_markdown import (
 
 
 class TestStripFrontmatter:
+    """Edge cases for :func:`_strip_frontmatter`."""
+
     def test_no_frontmatter(self):
         lines = ["# Changelog\n", "## 0.1.0\n"]
         clean, offset = _strip_frontmatter(lines)
@@ -23,6 +34,7 @@ class TestStripFrontmatter:
         assert offset == 0
 
     def test_empty_file(self):
+        """An empty line list must return cleanly with offset 0."""
         clean, offset = _strip_frontmatter([])
         assert clean == []
         assert offset == 0
@@ -48,6 +60,7 @@ class TestStripFrontmatter:
         assert offset == 0  # doesn't start with ---
 
     def test_frontmatter_with_only_delimiters(self):
+        """A frontmatter block containing only the delimiters must be stripped correctly."""
         lines = ["---\n", "---\n", "# Changelog\n"]
         clean, offset = _strip_frontmatter(lines)
         assert offset == 2
@@ -55,12 +68,15 @@ class TestStripFrontmatter:
 
 
 def _make_config(tmp_path: Path, content: str) -> str:
+    """Write *content* to a temporary CHANGELOG.md and return its path."""
     path = tmp_path / "CHANGELOG.md"
     path.write_text(content, encoding="utf-8")
     return str(path)
 
 
 class TestSPDXMarkdown:
+    """Integration-level tests for :class:`SPDXMarkdown` methods."""
+
     @pytest.fixture
     def formatter(self):
         config = BaseConfig()

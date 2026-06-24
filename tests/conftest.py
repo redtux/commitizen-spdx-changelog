@@ -4,9 +4,16 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-import commitizen.changelog_formats  # noqa: F401  — warm up before plugin import
+"""Shared fixtures for the commitizen-spdx-changelog test suite.
+
+The warm-up import of ``commitizen.changelog_formats`` must happen at
+module level to break the circular-import cycle described in
+:mod:`commitizen_spdx_changelog.formatters.spdx_markdown`.
+"""
 
 import pytest
+
+import commitizen.changelog_formats  # noqa: F401  — warm up before plugin import
 
 
 @pytest.fixture
@@ -38,6 +45,7 @@ icon: lucide/git-commit-vertical
 
 @pytest.fixture
 def plain_changelog() -> str:
+    """Changelog with no YAML frontmatter."""
     return """\
 # Changelog
 
@@ -51,6 +59,7 @@ def plain_changelog() -> str:
 
 @pytest.fixture
 def changelog_unclosed_frontmatter() -> str:
+    """Changelog with a ``---`` that is never closed — treated as regular content."""
     return """\
 ---
 # SPDX-FileCopyrightText: 2026 Pablo Hörtner <redtux@pm.me>
@@ -69,4 +78,5 @@ def changelog_unclosed_frontmatter() -> str:
 
 @pytest.fixture
 def empty_changelog() -> str:
+    """Empty string fixture for edge-case testing."""
     return ""
