@@ -29,9 +29,10 @@ from the behavioural unit tests in `tests/test_spdx_markdown.py`.
 
 ### Requirement: Cold import with warm-up succeeds
 
-Imports that follow the warm-up pattern (`import commitizen.changelog_formats`
-first) SHALL succeed in a fresh subprocess, confirming that the circular-import
-fix at the test boundary is complete.
+The test suite SHALL succeed in importing `SPDXMarkdown` via a fresh subprocess
+when following the warm-up pattern (`import commitizen.changelog_formats`
+first), confirming that the circular-import fix at the test boundary is
+complete.
 
 #### Scenario: Cold import of SPDXMarkdown succeeds
 
