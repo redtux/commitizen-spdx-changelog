@@ -13,6 +13,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog][keepachangelog], and this project
 adheres to [Semantic Versioning][semver2].
 
+## v0.1.3 (2026-06-24)
+
+### Refactor
+
+- **api**: improve package docstrings
+
 ## v0.1.2 (2026-06-24)
 
 ### Refactor
