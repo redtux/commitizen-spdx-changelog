@@ -1,0 +1,74 @@
+---
+
+# SPDX-FileCopyrightText: 2026 Pablo Hörtner <redtux@pm.me>
+#
+# SPDX-License-Identifier: Apache-2.0
+
+# .github/workflows/docs.yaml — new file
+#
+# This file is part of commitizen-spdx-changelog, a plugin
+# for commitizen that generates changelogs in SPDX format.
+
+name: Docs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - "README.md"
+      - "mkdocs.yml"      # or whatever your zensical config file is named
+      - ".github/workflows/docs.yaml"
+  pull_request:
+    paths:
+      - "docs/**"
+      - "README.md"
+      - "mkdocs.yml"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.14"
+          enable-cache: true
+          cache-suffix: "3.14"
+
+      - name: Install dev dependencies
+        run: uv sync --group dev
+
+      - name: Lint markdown formatting
+        run: make docs-lint
+
+      - name: Build documentation
+        run: make docs-build
+
+      - name: Upload Pages artifact
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./site
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
