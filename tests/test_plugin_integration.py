@@ -12,6 +12,7 @@ and instanceof checks via real inheritance.
 
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -30,11 +31,20 @@ class TestColdImport:
     """Run imports in a fresh subprocess to verify no circular imports."""
 
     def _run(self, code: str) -> subprocess.CompletedProcess:
+        env = os.environ.copy()
+        src_dir = str(REPO_ROOT / "src")
+        env["PYTHONPATH"] = (
+            f"{src_dir}{os.pathsep}{env['PYTHONPATH']}"
+            if "PYTHONPATH" in env
+            else src_dir
+        )
         return subprocess.run(
             [sys.executable, "-c", code],
             capture_output=True,
             text=True,
             cwd=REPO_ROOT,
+            env=env,
+            timeout=10,
         )
 
     def test_cold_import_spdx_markdown(self):
@@ -94,6 +104,4 @@ class TestSPDXMarkdownIsInstance:
 
 
 if __name__ == "__main__":
-    import pytest
-
-    raise SystemExit(pytest.main([__file__]))
+    sys.exit(pytest.main([__file__]))
