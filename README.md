@@ -16,8 +16,7 @@ A [commitizen] changelog format plugin with YAML frontmatter awareness —
 designed for REUSE/SPDX-compliant changelogs. No more false version detection
 from license headers like `Apache-2.0`.
 
-> [!WARNING]
-> _This project is in early development._
+> **Warning:** This project is in early development.
 
 ## Features
 
@@ -49,9 +48,8 @@ header lands as a YAML comment inside the front matter, not as an HTML comment:
 front matter. It reads `Apache-2.0` as a version number, causing
 `cz bump --changelog` to fail silently or produce wrong results.
 
-> [!NOTE]
-> This plugin strips the front matter before parsing, so your changelog stays
-> compliant, doc-generator-friendly, and commitizen-compatible — all at once.
+This plugin strips the front matter before parsing, so your changelog stays
+compliant, doc-generator-friendly, and commitizen-compatible — all at once.
 
 ## Getting started
 
@@ -62,9 +60,8 @@ uv add commitizen-spdx-changelog
 # or: pip install commitizen-spdx-changelog
 ```
 
-> [!TIP]
-> See the [docs landing page](docs/index.md) for a full overview, and the
-> [usage guide](docs/guide.md) for furher setup and workflow instructions.
+See the [docs landing page](docs/index.md) for a full overview, and the
+[usage guide](docs/guide.md) for furher setup and workflow instructions.
 
 ### Configuration
 
@@ -105,16 +102,14 @@ direnv allow
 uv sync --group dev
 ```
 
-> [!TIP]
-> Running `direnv allow` will activate the [devbox] environment automatically.
-> See the [Devbox guide](docs/devbox.md) for all available commands and tools.
+Running `direnv allow` will activate the [devbox] environment automatically. See
+the [Devbox guide](docs/devbox.md) for all available commands and tools.
 
 ## Contributing
 
-> [!NOTE]
-> Bug reports, feature requests, and pull requests are welcome.
+Bug reports, feature requests, and pull requests are welcome.
 
-- See [docs/contributing.md](docs/contributing.md) for guidelines.
+See [docs/contributing.md](docs/contributing.md) for guidelines.
 
 For documentation contributions, please follow these principles:
 
