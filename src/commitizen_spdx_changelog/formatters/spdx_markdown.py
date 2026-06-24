@@ -2,94 +2,33 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# src/commitizen_spdx_changelog/formatters/spdx_markdown.py
-#
-# SPDXMarkdown is defined BEFORE any commitizen import to break
-# a circular dependency. When commitizen scans changelog_format entry
-# points, it imports this module. The entry-point loader (ep.load())
-# needs `SPDXMarkdown` to already exist on the partially-loaded module.
-# By placing the class definition first (it does not depend on commitizen
-# internals), the scanner finds it immediately. The real implementation
-# in _SPDXMarkdownImpl (which imports commitizen.changelog_formats.markdown)
-# is defined AFTER the wrapper and all commitizen imports.
-
 """SPDX/REUSE-aware Markdown changelog format for commitizen.
 
-This module defines the ``SPDXMarkdown`` wrapper and the real
-``_SPDXMarkdownImpl`` implementation. ``SPDXMarkdown`` is defined before
-any commitizen imports to avoid circular imports during commitizen's
-entry-point scanning phase.
+Compatible with REUSE/SPDX-compliant changelogs that carry a ``---``
+delimited YAML frontmatter block (e.g. SPDX headers) before the Markdown
+body. Registered under the ``commitizen.changelog_format`` entry point
+as ``spdx-markdown``.
+
+Note: importing this module directly, before anything else in the
+process has imported ``commitizen.changelog_formats``, will raise an
+``AttributeError`` due to a circular import inside commitizen's own
+entry-point-loading machinery (it loads all registered
+``commitizen.changelog_format`` plugins, including this one, from a
+module-level dict comprehension). This never occurs during real ``cz``
+usage, since commitizen's CLI bootstrap imports
+``commitizen.changelog_formats`` before scanning plugins. It can occur
+if a test imports this module cold — see ``tests/conftest.py`` for the
+one-line warm-up import that avoids it for the test suite.
 """
 
 from __future__ import annotations
 
-import abc
-from typing import TYPE_CHECKING
+import io
+from collections.abc import Sequence
+from pathlib import Path
 
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
-    from commitizen.changelog import IncrementalMergeInfo, Metadata
-    from commitizen.config.base_config import BaseConfig
-
-
-class SPDXMarkdown(abc.ABC):
-    """Markdown changelog format with YAML frontmatter awareness.
-
-    Compatible with REUSE/SPDX-compliant changelogs that carry an SPDX header
-    block before the Markdown body.
-
-    This is a lazy wrapper that delegates to ``_SPDXMarkdownImpl(Markdown)``
-    in the same module. The class is defined before any ``commitizen`` import
-    to break a circular dependency during entry-point scanning.
-    ``__new__`` resolves the real class lazily so commitizen never triggers
-    the import chain while its own modules are still loading.
-
-    The real implementation overrides two methods from the parent ``Markdown``
-    changelog format:
-
-    - ``get_metadata()`` — strips ``---``-delimited YAML frontmatter via
-      :func:`_strip_frontmatter`, delegates to
-      ``get_metadata_from_file()``, then shifts returned line indices by the
-      frontmatter line count.
-    - ``get_latest_full_release()`` — same frontmatter stripping and index
-      shift applied to ``get_latest_full_release_from_file()``.
-
-    Attributes:
-        extension: Default file extension for changelog files.
-        alternative_extensions: Additional recognised file extensions.
-    """
-
-    extension = "md"
-    alternative_extensions = {"markdown", "mkd"}
-
-    _real_cls = None
-
-    @classmethod
-    def _resolve(cls):
-        if cls._real_cls is None:
-            cls._real_cls = _SPDXMarkdownImpl
-        return cls._real_cls
-
-    def __new__(cls, config=None):
-        return cls._resolve()(config)  # type: ignore[arg-type]
-
-    if TYPE_CHECKING:
-        config: BaseConfig
-
-        def get_metadata(self, filepath: str) -> Metadata: ...
-
-        def get_latest_full_release(self, filepath: str) -> IncrementalMergeInfo: ...
-
-
-# --- Safe to import commitizen internals — SPDXMarkdown is already defined ---
-
-import io  # noqa: E402
-from pathlib import Path  # noqa: E402
-from collections.abc import Sequence  # noqa: E402
-
-from commitizen.changelog import IncrementalMergeInfo, Metadata  # noqa: E402
-from commitizen.changelog_formats.markdown import Markdown  # noqa: E402
+from commitizen.changelog import IncrementalMergeInfo, Metadata
+from commitizen.changelog_formats.markdown import Markdown
 
 
 def _strip_frontmatter(lines: Sequence[str]) -> tuple[list[str], int]:
@@ -122,11 +61,16 @@ def _strip_frontmatter(lines: Sequence[str]) -> tuple[list[str], int]:
     return list(lines), 0  # unclosed frontmatter — treat as no-op
 
 
-class _SPDXMarkdownImpl(Markdown):
-    """Actual implementation — subclasses Markdown for work, SPDXMarkdown for isinstance.
+class SPDXMarkdown(Markdown):
+    """Markdown changelog format with YAML frontmatter awareness.
 
-    Wraps :class:`commitizen.changelog_formats.markdown.Markdown` with
-    YAML frontmatter stripping via :func:`_strip_frontmatter`.
+    Overrides two methods from :class:`commitizen.changelog_formats.markdown.Markdown`:
+
+    - ``get_metadata()`` — strips frontmatter via :func:`_strip_frontmatter`,
+      delegates to ``get_metadata_from_file()``, then shifts the returned
+      line indices by the frontmatter line count.
+    - ``get_latest_full_release()`` — same stripping and index shift applied
+      to ``get_latest_full_release_from_file()``.
 
     Attributes:
         config: The commitizen configuration object.
@@ -196,6 +140,3 @@ class _SPDXMarkdownImpl(Markdown):
             name=result.name,
             index=(result.index + offset) if result.index is not None else None,
         )
-
-
-SPDXMarkdown.register(_SPDXMarkdownImpl)
