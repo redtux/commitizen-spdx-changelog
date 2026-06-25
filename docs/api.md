@@ -1,5 +1,6 @@
 ---
 # SPDX-FileCopyrightText: 2026 Pablo Hörtner <redtux@pm.me>
+# SPDX-FileContributor: https://redtux.github.io/commitizen-spdx-changelog/credits/
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -18,7 +19,7 @@ version numbers.
 Use this formatter when your changelog includes an SPDX/REUSE header block — set
 `changelog_format = "spdx-markdown"` in your project configuration.
 
-## Usage example
+### Usage example
 
 Configure [commitizen] in `pyproject.toml`:
 

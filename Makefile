@@ -1,4 +1,5 @@
 # SPDX-FileCopyrightText: 2026 Pablo Hörtner <redtux@pm.me>
+# SPDX-FileContributor: https://redtux.github.io/commitizen-spdx-changelog/credits/
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -77,6 +78,7 @@ py-lint:
 
 reuse:
 	@uv run reuse annotate \
+		--contributor "https://redtux.github.io/commitizen-spdx-changelog/credits/" \
 		--copyright "Pablo Hörtner <redtux@pm.me>" \
 		--fallback-dot-license \
 		--license Apache-2.0 \

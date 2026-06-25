@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # SPDX-FileCopyrightText: 2026 Pablo Hörtner <redtux@pm.me>
+# SPDX-FileContributor: https://redtux.github.io/commitizen-spdx-changelog/credits/
 #
 # SPDX-License-Identifier: Apache-2.0
 

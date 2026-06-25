@@ -1,11 +1,12 @@
 ---
 # SPDX-FileCopyrightText: 2026 Pablo Hörtner <redtux@pm.me>
+# SPDX-FileContributor: https://redtux.github.io/commitizen-spdx-changelog/credits/
 #
 # SPDX-License-Identifier: Apache-2.0
 
 description: Collapse module into single file and remove lazy import
 icon: lucide/combine
-status: superseded
+status: deprecated
 title: Plan 10 — Collapse _impl.py
 ---
 
