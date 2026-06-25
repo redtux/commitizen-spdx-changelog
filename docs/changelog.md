@@ -14,6 +14,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog][keepachangelog], and this project
 adheres to [Semantic Versioning][semver2].
 
+## v0.1.4 (2026-06-25)
+
+### Fix
+
+- update docs for consistency and remove typos
+
 ## v0.1.3 (2026-06-24)
 
 ### Refactor
