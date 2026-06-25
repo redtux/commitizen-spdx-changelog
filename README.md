@@ -1,5 +1,6 @@
 <!--
 SPDX-FileCopyrightText: 2026 Pablo Hörtner <redtux@pm.me>
+SPDX-FileContributor: https://redtux.github.io/commitizen-spdx-changelog/credits/
 
 SPDX-License-Identifier: Apache-2.0
 -->
@@ -60,8 +61,8 @@ uv add commitizen-spdx-changelog
 # or: pip install commitizen-spdx-changelog
 ```
 
-See the [docs landing page](docs/index.md) for a full overview, and the
-[usage guide](docs/guide.md) for furher setup and workflow instructions.
+See the [docs landing page] for a full overview, and the [usage guide] for
+furher setup and workflow instructions.
 
 ### Configuration
 
@@ -103,13 +104,13 @@ uv sync --group dev
 ```
 
 Running `direnv allow` will activate the [devbox] environment automatically. See
-the [Devbox guide](docs/devbox.md) for all available commands and tools.
+the [Devbox guide] for all available commands and tools.
 
 ## Contributing
 
 Bug reports, feature requests, and pull requests are welcome.
 
-See [docs/contributing.md](docs/contributing.md) for guidelines.
+See [contributing] for guidelines.
 
 For documentation contributions, please follow these principles:
 
@@ -118,19 +119,29 @@ Every page in `docs/` and the project `README.md` are held to these standards.
 
 ## License
 
-Distributed under the terms of the [Apache License 2.0](LICENSE.md).
+Copyright © 2026 Pablo Hörtner
 
-- Copyright © 2026 Pablo Hörtner
+Licensed under the [Apache License, Version 2.0][license-link] (the "License");
+you may not use this file except in compliance with the License. You may obtain
+a copy of the License at <<http://www.apache.org/licenses/LICENSE-2.0>>.
+
+Unless required by applicable law or agreed to in writing, software distributed
+under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND, either express or implied. See the License for the
+specific language governing permissions and limitations under the License.
 
 <!-- References -->
 
 [ci-badge]: https://badgen.net/github/checks/redtux/commitizen-spdx-changelog
 [ci-link]: https://github.com/redtux/commitizen-spdx-changelog/actions
 [commitizen]: https://commitizen-tools.github.io/commitizen/
+[contributing]: https://redtux.github.io/commitizen-spdx-changelog/contributing/
 [devbox]: https://github.com/jetify-com/devbox
+[devbox guide]: https://redtux.github.io/commitizen-spdx-changelog/devbox/
+[docs landing page]: https://redtux.github.io/commitizen-spdx-changelog/
 [docusaurus]: https://docusaurus.io/
 [license-badge]: https://badgen.net/github/license/redtux/commitizen-spdx-changelog
-[license-link]: LICENSE.md
+[license-link]: https://redtux.github.io/commitizen-spdx-changelog/license/
 [okf]: https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md
 [pypi-badge]: https://badgen.net/pypi/v/commitizen-spdx-changelog
 [pypi-link]: https://pypi.org/project/commitizen-spdx-changelog/
@@ -140,4 +151,5 @@ Distributed under the terms of the [Apache License 2.0](LICENSE.md).
 [reuse]: https://reuse.software/
 [typing-svg-badge]: https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&width=435&lines=SPDX-compliant+Commitizen+Changelogs
 [typing-svg-link]: https://git.io/typing-svg
+[usage guide]: https://redtux.github.io/commitizen-spdx-changelog/guide/
 [zensical]: https://zensical.org/
