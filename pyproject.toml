@@ -1,4 +1,5 @@
 # SPDX-FileCopyrightText: 2026 Pablo Hörtner <redtux@pm.me>
+# SPDX-FileContributor: https://redtux.github.io/commitizen-spdx-changelog/credits/
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -43,6 +44,7 @@ spdx-markdown = "commitizen_spdx_changelog.formatters.spdx_markdown:SPDXMarkdown
 
 [dependency-groups]
 dev = [
+    "markdown-gfm-admonition>=0.3.0",
     "mdformat-gfm-alerts>=2.0.0",
     "mdformat-mkdocs[recommended]>=5.1.4",
     "mdformat-pyproject>=0.1.1",
