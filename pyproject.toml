@@ -12,36 +12,6 @@
 build-backend = "uv_build"
 requires = ["uv_build>=0.11.21,<0.12.0"]
 
-[project]
-authors = [
-  { name = "Pablo Hörtner", email = "redtux@pm.me" }
-]
-dependencies = [
-    "commitizen>=4.16.3",
-]
-description = "Commitizen changelog format plugin with YAML frontmatter awareness for REUSE/SPDX-compliant changelogs"
-keywords = ["commitizen", "changelog", "spdx", "reuse", "yaml", "frontmatter"]
-license = "Apache-2.0"
-classifiers = [
-    "Development Status :: 3 - Alpha",
-    "Intended Audience :: Developers",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.13",
-    "Programming Language :: Python :: 3.14",
-]
-name = "commitizen-spdx-changelog"
-readme = "README.md"
-requires-python = ">=3.13"
-version = "0.1.3"
-
-[project.urls]
-Homepage = "https://github.com/redtux/commitizen-spdx-changelog"
-Issues = "https://github.com/redtux/commitizen-spdx-changelog/issues"
-Source = "https://github.com/redtux/commitizen-spdx-changelog"
-
-[project.entry-points."commitizen.changelog_format"]
-spdx-markdown = "commitizen_spdx_changelog.formatters.spdx_markdown:SPDXMarkdown"
-
 [dependency-groups]
 dev = [
     "markdown-gfm-admonition>=0.3.0",
@@ -58,13 +28,43 @@ dev = [
     "zensical>=0.0.46",
 ]
 
+[project]
+authors = [
+  { name = "Pablo Hörtner", email = "redtux@pm.me" }
+]
+dependencies = [
+    "commitizen>=4.16.3",
+]
+description = "Commitizen changelog format with SPDX/REUSE frontmatter awareness"
+keywords = ["commitizen", "changelog", "spdx", "reuse", "yaml", "frontmatter"]
+license = "Apache-2.0"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+name = "commitizen-spdx-changelog"
+readme = "README.md"
+requires-python = ">=3.13"
+version = "0.1.3"
+
+[project.entry-points."commitizen.changelog_format"]
+spdx-markdown = "commitizen_spdx_changelog.formatters.spdx_markdown:SPDXMarkdown"
+
+[project.urls]
+Homepage = "https://redtux.github.io/commitizen-spdx-changelog"
+Issues = "https://github.com/redtux/commitizen-spdx-changelog/issues"
+Source = "https://github.com/redtux/commitizen-spdx-changelog"
+
 [tool.commitizen]
 changelog_file = "docs/changelog.md"
 changelog_format = "spdx-markdown"
 changelog_incremental = true
 major_version_zero = true
 name = "cz_conventional_commits"
-post_bump_hooks = ["make uv-lock", "git push --follow-tags"]
+post_bump_hooks = ["make uv-lock", "git push --tags --follow-tags"]
 tag_format = "v$version"
 update_changelog_on_bump = true
 version = "0.1.3"
@@ -72,10 +72,6 @@ version_files = [
     "pyproject.toml:version",
 ]
 version_scheme = "semver2"
-
-[tool.pyright]
-venvPath = "."
-venv = ".venv"
 
 [tool.mdformat]
 exclude = [
@@ -97,3 +93,9 @@ exclude = [
 ]
 number = true
 wrap = 80
+
+# NOTE: While the project uses ty for type checking,
+# we keep this for use with OpenCode's pyright LSP.
+[tool.pyright]
+venvPath = "."
+venv = ".venv"

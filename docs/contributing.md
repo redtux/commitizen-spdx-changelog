@@ -34,8 +34,11 @@ uv sync --group dev
 | ------------------ | ------------------------------------------- |
 | Build distribution | `uv build`                                  |
 | Build docs         | `make docs-build`                           |
+| Bump & changelog   | `cz bump --changelog`                       |
 | Format markdown    | `make docs-format`                          |
+| Format Python code | `make py-format`                            |
 | Lint markdown      | `make docs-lint`                            |
+| Lint Python code   | `make py-lint`                              |
 | REUSE compliance   | `make reuse`                                |
 | Run single test    | `uv run python tests/test_spdx_markdown.py` |
 | Run tests          | `uv run pytest -v`                          |
@@ -45,9 +48,9 @@ uv sync --group dev
 The [Devbox guide](devbox.md) documents the development environment, scripts,
 and packages — regenerate it any time `devbox.json` changes.
 
-There is no standalone linter or typecheck script — `ruff` runs inside
-`mdformat-ruff` (formats code fences in markdown). `pyright` configuration
-exists in `pyproject.toml` but is not wired into a command.
+Python linting uses `ruff check` and `ty check` directly via `make py-lint`.
+Python formatting uses `ruff check --fix` and `ty check --fix` via
+`make py-format`.
 
 ### Reproducing the YAML frontmatter bug
 
@@ -69,10 +72,12 @@ This is a single-package Python plugin for [commitizen]. It lives at
 
 ### Circular import workaround
 
-The entry point class (`SPDXMarkdown`) is defined before any `commitizen`
-import. The real implementation in `_impl.py` is imported lazily inside
-`__new__`. This lets commitizen's entry-point scanner find the class without
-triggering a circular import.
+The `SPDXMarkdown` class inherits directly from
+`commitizen.changelog_formats.markdown.Markdown`. A warm-up import in
+`tests/conftest.py` initializes `commitizen.changelog_formats` before any test
+module imports the plugin, preventing the circular-import cycle that would
+otherwise occur if the plugin module is the first to touch commitizen's
+entry-point-loading machinery.
 
 Only two methods override the parent `Markdown` changelog format:
 `get_metadata()` and `get_latest_full_release()`. Both strip `---`-delimited
@@ -113,6 +118,18 @@ ready README.md must show ✅ on all five requirements:
 | 3   | Status (early development, stable, deprecated) | ✅     |
 | 4   | How to use with copyable commands              | ✅     |
 | 5   | Links to relevant documentation                | ✅     |
+
+## Post-edit checklist
+
+After editing any file, run:
+
+```sh
+make py-format
+make docs-format
+make reuse
+make py-lint
+make docs-lint
+```
 
 ## How to contribute
 
