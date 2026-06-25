@@ -13,13 +13,13 @@ title: Credits
 
 The `commitizen-spdx-changelog` plugin was created by [redtux].
 
-- Pablo Hörtner \<<redtux@pm.me>>
+- `Pablo Hörtner <redtux@pm.me>`
 
 ## Author of commitizen
 
 The plugin would be impossible without `commitizen` by [woile].
 
-- Santiago Fraire Willemoes \<<santiwilly@gmail.com>>
+- `Santiago Fraire Willemoes <santiwilly@gmail.com>`
 
 <!-- Resources -->
 
