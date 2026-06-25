@@ -1,4 +1,5 @@
 # SPDX-FileCopyrightText: 2026 Pablo Hörtner <redtux@pm.me>
+# SPDX-FileContributor: https://redtux.github.io/commitizen-spdx-changelog/credits/
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -11,6 +12,9 @@
 # ============================================================================
 
 [project]
+dev_addr = "localhost:8000"
+docs_dir = "docs"
+site_dir = "site"
 
 # The site_name is shown in the page header and the browser window title
 #
@@ -31,6 +35,8 @@ site_author = "Pablo Hörtner"
 # The site_url is the canonical URL for your site. When building online
 # documentation you should set this.
 # Read more: https://zensical.org/docs/setup/basics/#site_url
+repo_name = "commitizen-spdx-changelog"
+repo_url = "https://github.com/redtux/commitizen-spdx-changelog/"
 site_url = "https://redtux.github.io/commitizen-spdx-changelog/"
 
 # The copyright notice appears in the page footer and can contain an HTML
@@ -38,7 +44,7 @@ site_url = "https://redtux.github.io/commitizen-spdx-changelog/"
 #
 # Read more: https://zensical.org/docs/setup/basics/#copyright
 copyright = """
-Copyright &copy; 2026 Pablo Hörtner &lt;redtux@pm.me&gt;
+Copyright &copy; 2026 Pablo Hörtner
 """
 
 # Zensical supports both implicit navigation and explicitly defined navigation.
@@ -50,10 +56,19 @@ Copyright &copy; 2026 Pablo Hörtner &lt;redtux@pm.me&gt;
 # Read more: https://zensical.org/docs/setup/navigation/
 nav = [
   { "Home" = "index.md" },
-  { "Changelog" = "changelog.md" },
-  { "Contributing" = "contributing.md" },
-  { "API Reference" = "api.md" },
-  { "Plans" = "plans/index.md" },
+  { "Docs" = [
+    "readme.md",
+    "guide.md",
+    "devbox.md",
+    "api.md"
+  ]},
+  { "Plans" = ["plans/index.md"]},
+  { "About" = [
+    "contributing.md",
+    "changelog.md",
+    "credits.md"
+  ]},
+  { "License" = "license.md" }
 ]
 
 # With the "extra_css" option you can add your own CSS styling to customize
@@ -129,13 +144,13 @@ features = [
     # will generate an edit button for the page. This works for common
     # repository hosting services.
     # https://zensical.org/docs/setup/repository/#content-actions
-    #"content.action.edit",
+    "content.action.edit",
 
     # If you have a repository configured and turn on this feature, Zensical
     # will generate a button that allows the user to view the Markdown
     # code for the current page.
     # https://zensical.org/docs/setup/repository/#content-actions
-    #"content.action.view",
+    "content.action.view",
 
     # Code annotations allow you to add an icon with a tooltip to your
     # code blocks to provide explanations at crucial points.
@@ -171,7 +186,7 @@ features = [
     # With this feature enabled, Zensical will automatically hide parts
     # of the header when the user scrolls past a certain point.
     # https://zensical.org/docs/setup/header/#automatic-hiding
-    # "header.autohide",
+    "header.autohide",
 
     # Turn on this feature to expand all collapsible sections in the
     # navigation sidebar by default.
@@ -202,7 +217,7 @@ features = [
     # In order to provide a better user experience on slow connections when
     # using instant navigation, a progress indicator can be enabled.
     # https://zensical.org/docs/setup/navigation/#progress-indicator
-    #"navigation.instant.progress",
+    "navigation.instant.progress",
 
     # When navigation paths are activated, a breadcrumb navigation is rendered
     # above the title of each page
@@ -212,7 +227,7 @@ features = [
     # When pruning is enabled, only the visible navigation items are included
     # in the rendered HTML, reducing the size of the built site by 33% or more.
     # https://zensical.org/docs/setup/navigation/#navigation-pruning
-    #"navigation.prune",
+    "navigation.prune",
 
     # When sections are enabled, top-level sections are rendered as groups in
     # the sidebar for viewports above 1220px, but remain as-is on mobile.
@@ -248,7 +263,7 @@ features = [
     # When anchor following for the table of contents is enabled, the sidebar
     # is automatically scrolled so that the active anchor is always visible.
     # https://zensical.org/docs/setup/navigation/#anchor-following
-    # "toc.follow",
+    "toc.follow",
 
     # When navigation integration for the table of contents is enabled, it is
     # always rendered as part of the navigation sidebar on the left.
@@ -275,6 +290,7 @@ features = [
 [project.theme.icon]
 #logo = "lucide/smile"
 logo = "lucide/bot"
+repo = "fontawesome/brands/github-alt"
 
 # ----------------------------------------------------------------------------
 # In the "font" subsection you can configure the fonts used. By default, fonts
@@ -296,11 +312,15 @@ logo = "lucide/bot"
 # - https://zensical.org/docs/setup/colors/
 # ----------------------------------------------------------------------------
 [[project.theme.palette]]
+accent = "light blue"
+primary = "light blue"
 scheme = "default"
 toggle.icon = "lucide/sun"
 toggle.name = "Switch to dark mode"
 
 [[project.theme.palette]]
+accent = "light blue"
+primary = "light blue"
 scheme = "slate"
 toggle.icon = "lucide/moon"
 toggle.name = "Switch to light mode"
@@ -308,9 +328,13 @@ toggle.name = "Switch to light mode"
 # ----------------------------------------------------------------------------
 # The "extra" section contains miscellaneous settings.
 # ----------------------------------------------------------------------------
+[project.extra]
+generator = true
+
 [[project.extra.social]]
-icon = "fontawesome/brands/github"
-link = "https://github.com/redtux/commitizen-spdx-changelog"
+icon = "fontawesome/brands/python"
+link = "https://pypi.org/project/commitizen-spdx-changelog"
+name = "commitizen-spdx-changelog on PyPI"
 
 # ----------------------------------------------------------------------------
 # In this section you can configure the Markdown extensions that are used when
@@ -330,6 +354,8 @@ link = "https://github.com/redtux/commitizen-spdx-changelog"
 [project.markdown_extensions.def_list]
 # Footnotes — `[^1]` / `[^1]: text` syntax
 [project.markdown_extensions.footnotes]
+# GitHub-style Admonitions
+[project.markdown_extensions.gfm_admonition]
 # Markdown in HTML — allows Markdown inside raw HTML blocks
 [project.markdown_extensions.md_in_html]
 # Table of contents — auto-generates anchor links in headings
